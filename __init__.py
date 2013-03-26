@@ -17,16 +17,17 @@ gravity = b2Vec2(0.0, -10.0)
 doSleep = True
 
 # Construct a world object, which will hold and simulate the rigid bodies.
-world = b2World(gravity, doSleep)
+world = b2World(worldAABB, gravity, doSleep)
 
 # Define the ground body.
 groundBodyDef = b2BodyDef()
 groundBodyDef.position.Set(0.0, -10.0)
+groundBodyDef.mass = 0
 
 # Call the body factory which allocates memory for the ground body
 # from a pool and creates the ground box shape (also from a pool).
 # The body is also added to the world.
-groundBody = world.CreateStaticBody(groundBodyDef)
+groundBody = world.CreateBody(groundBodyDef)
 
 # Define the ground box shape.
 groundShapeDef = b2PolygonDef()
@@ -40,7 +41,7 @@ groundBody.CreateShape(groundShapeDef)
 # Define the dynamic body. We set its position and call the body factory.
 bodyDef = b2BodyDef()
 bodyDef.position.Set(0.0, 4.0)
-body = world.CreateDynamicBody(bodyDef)
+body = world.CreateBody(bodyDef)
 
 # Define another box shape for our dynamic body.
 shapeDef = b2PolygonDef()
@@ -68,7 +69,7 @@ iterations = 10
 for i in range(60):
    # Instruct the world to perform a single step of simulation. It is
    # generally best to keep the time step and iterations fixed.
-   world.Step(timeStep, iterations)
+   world.Step(timeStep, iterations, iterations)
 
    # Now print the position and angle of the body.
    position = body.GetPosition()
