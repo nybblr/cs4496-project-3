@@ -43,26 +43,10 @@ class Game:
 		shapes = self.shapes
 
 		# Define the ground body.
-		groundBodyDef = b2BodyDef()
-		groundBodyDef.position.Set(0.0, -10.0)
-		groundBodyDef.mass = 0
-
-		# Call the body factory which allocates memory for the ground body
-		# from a pool and creates the ground box shape (also from a pool).
-		# The body is also added to the world.
-		groundBody = world.CreateBody(groundBodyDef)
-
-		# Define the ground box shape.
-		groundShapeDef = b2PolygonDef()
-
-		# The extents are the half-widths of the box.
-		groundShapeDef.SetAsBox(50.0, 10.0)
-
-		# Add the ground shape to the ground body.
-		groundBody.CreateShape(groundShapeDef)
+		groundBody = Shape.initGround(self)
 
 		# Add shape
-		shapes.append(Shape(self, groundBody, (255,127,127,127)))
+		shapes.append(groundBody)
 
 		# Define the dynamic body. We set its position and call the body factory.
 		bodyDef = b2BodyDef()
@@ -109,10 +93,6 @@ class Game:
 			# Instruct the world to perform a single step of simulation. It is
 			# generally best to keep the time step and iterations fixed.
 			world.Step(timeStep, iterations, iterations)
-
-			# Now print the position and angle of the body.
-			position = body.GetPosition()
-			angle = body.GetAngle()
 
 			pygame.display.flip()
 			self.clock.tick(self.fps)
