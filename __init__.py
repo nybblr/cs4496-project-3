@@ -43,34 +43,21 @@ class Game:
 		shapes = self.shapes
 
 		# Define the ground body.
-		groundBody = Shape.initGround(self)
+		ground = Shape.initGround(self)
 
 		# Add shape
-		shapes.append(groundBody)
+		shapes.append(ground)
 
-		# Define the dynamic body. We set its position and call the body factory.
-		bodyDef = b2BodyDef()
-		bodyDef.position.Set(0.0, 4.0)
-		body = world.CreateBody(bodyDef)
-
-		# Define another box shape for our dynamic body.
-		shapeDef = b2PolygonDef()
-		shapeDef.SetAsBox(1.0, 1.0)
-
-		# Set the box density to be non-zero, so it will be dynamic.
-		shapeDef.density = 1.0
-
-		# Override the default friction.
-		shapeDef.friction = 0.3
-
-		# Add the shape to the body.
-		body.CreateShape(shapeDef)
-
-		# Now tell the dynamic body to compute it's mass properties base on its shape.
-		body.SetMassFromShapes()
+		# Define the dynamic body.
+		body = Shape(self,
+				kind = "box",
+				position = (0.0, 23.0),
+				params = (1.0, 1.0),
+				restitution = 0.5
+		)
 
 		# Add shape
-		shapes.append(Shape(self, body, (127,127,127,127)))
+		shapes.append(body)
 
 		# Prepare for simulation. Typically we use a time step of 1/60 of a
 		# second (60Hz) and 10 iterations. This provides a high quality simulation

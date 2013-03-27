@@ -4,10 +4,45 @@ from pygame.locals import *
 from Box2D import *
 
 class Shape:
-	def __init__(self, game, body, color):
+	def __init__(self, game, body=None, color=(255,255,255,255), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0):
 		self.game = game
-		self.body = body
 		self.color = color
+
+		if not body:
+			# Define the dynamic body. We set its position and call the body factory.
+			bodyDef = b2BodyDef()
+			bodyDef.position.Set(*position)
+			bodyNew = game.world.CreateBody(bodyDef)
+
+			# Define another box shape for our dynamic body.
+			shapeDef = b2PolygonDef()
+
+			# Set the density to be non-zero, so it will be dynamic.
+			shapeDef.density = density
+
+			# Override the default friction.
+			shapeDef.friction = friction
+
+			# Set the restitution constant for bounce
+			shapeDef.restitution = restitution
+
+			if kind is "box":
+				shapeDef.SetAsBox(*params)
+			elif kind is "polygon":
+				shapeDef.setVertices(params)
+			else:
+				pass
+
+			# Add the shape to the body.
+			bodyNew.CreateShape(shapeDef)
+
+			# Now tell the dynamic body to compute it's mass properties base on its shape.
+			bodyNew.SetMassFromShapes()
+
+			self.body = bodyNew
+
+		else:
+			self.body = body
 
 	@classmethod
 	def initGround(klass, game):
@@ -15,7 +50,7 @@ class Shape:
 
 		# Define the ground body.
 		groundBodyDef = b2BodyDef()
-		groundBodyDef.position.Set(0.0, -10.0)
+		groundBodyDef.position.Set(0.0, -5.0)
 		groundBodyDef.mass = 0
 
 		# Call the body factory which allocates memory for the ground body
