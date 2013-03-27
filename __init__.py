@@ -1,8 +1,21 @@
+import pygame
+from pygame.locals import *
+
 from Box2D import *
 
 """ This is a simple example of building and running a simulation
     using Box2D. Here we create a large ground box and a small dynamic box
 """
+
+# --- constants ---
+PPM = 20.0 # pixels per meter
+TARGET_FPS = 60
+TIME_STEP = 1.0 / TARGET_FPS
+SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
+
+# --- pygame setup ---
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+clock = pygame.time.Clock()
 
 # Define the size of the world. Simulation will still work
 # if bodies reach the end of the world, but it will be slower.
@@ -66,13 +79,50 @@ timeStep = 1.0 / 60.0
 iterations = 10
 
 # This is our little game loop.
-for i in range(60):
-   # Instruct the world to perform a single step of simulation. It is
-   # generally best to keep the time step and iterations fixed.
-   world.Step(timeStep, iterations, iterations)
+running = True
+while running:
+  for event in pygame.event.get():
+    if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+      running = False
 
-   # Now print the position and angle of the body.
-   position = body.GetPosition()
-   angle = body.GetAngle()
+  screen.fill((0, 0, 0, 0))
 
-   print position.x, position.y, angle
+  for body in world.bodyList: # or: world.bodies
+    # The body gives us the position and angle of its shapes
+    for fixture in body.shapeList:
+      # The fixture holds information like density and friction,
+      # and also the shape.
+      shape=fixture#.shape
+
+      # Naively assume that this is a polygon shape. (not good normally!)
+      # We take the body's transform and multiply it with each 
+      # vertex, and then convert from meters to pixels with the scale
+      # factor. 
+      # vertices=[(body.GetXForm().R*v)*PPM for v in shape.vertices]
+      vertices=[b2Mul(body.GetXForm(), v)*PPM for v in shape.vertices]
+
+      # But wait! It's upside-down! Pygame and Box2D orient their
+      # axes in different ways. Box2D is just like how you learned
+      # in high school, with positive x and y directions going
+      # right and up. Pygame, on the other hand, increases in the
+      # right and downward directions. This means we must flip
+      # the y components.
+      vertices=[(v[0], SCREEN_HEIGHT-v[1]) for v in vertices]
+
+      pygame.draw.polygon(screen, (127,127,127,127), vertices)
+
+
+  # Instruct the world to perform a single step of simulation. It is
+  # generally best to keep the time step and iterations fixed.
+  world.Step(timeStep, iterations, iterations)
+
+  # Now print the position and angle of the body.
+  position = body.GetPosition()
+  angle = body.GetAngle()
+
+  pygame.display.flip()
+  clock.tick(TARGET_FPS)
+
+  print position.x, position.y, angle
+
+pygame.quit()
