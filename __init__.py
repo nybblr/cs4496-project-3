@@ -7,7 +7,7 @@ import physics
 import draw
 from shape import *
 
-class World:
+class Game:
 	def __init__(self):
 		# --- constants ---
 		self.ppm = 20.0 # pixels per meter
@@ -118,7 +118,7 @@ class World:
 			self.clock.tick(self.fps)
 
 if __name__ == "__main__":
-	world = World()
-	world.run()
+	game = Game()
+	game.run()
 
 	pygame.quit()
