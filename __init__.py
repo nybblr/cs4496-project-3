@@ -4,6 +4,8 @@ from pygame.locals import *
 from Box2D import *
 
 import physics
+import draw
+from shape import *
 
 class World:
 	def __init__(self):
@@ -33,9 +35,12 @@ class World:
 		# Construct a world object, which will hold and simulate the rigid bodies.
 		self.world = b2World(worldAABB, gravity, doSleep)
 
+		self.shapes = []
+
 	def run(self):
 		world = self.world
 		screen = self.screen
+		shapes = self.shapes
 
 		# Define the ground body.
 		groundBodyDef = b2BodyDef()
@@ -55,6 +60,9 @@ class World:
 
 		# Add the ground shape to the ground body.
 		groundBody.CreateShape(groundShapeDef)
+
+		# Add shape
+		shapes.append(Shape(self, groundBody, (255,127,127,127)))
 
 		# Define the dynamic body. We set its position and call the body factory.
 		bodyDef = b2BodyDef()
@@ -77,6 +85,9 @@ class World:
 		# Now tell the dynamic body to compute it's mass properties base on its shape.
 		body.SetMassFromShapes()
 
+		# Add shape
+		shapes.append(Shape(self, body, (127,127,127,127)))
+
 		# Prepare for simulation. Typically we use a time step of 1/60 of a
 		# second (60Hz) and 10 iterations. This provides a high quality simulation
 		# in most game scenarios.
@@ -92,29 +103,32 @@ class World:
 
 			screen.fill((0, 0, 0, 0))
 
-			for body in world.bodyList: # or: world.bodies
-				# The body gives us the position and angle of its shapes
-				for fixture in body.shapeList:
-					# The fixture holds information like density and friction,
-					# and also the shape.
-					shape=fixture#.shape
+			for shape in shapes:
+				shape.draw()
 
-					# Naively assume that this is a polygon shape. (not good normally!)
-					# We take the body's transform and multiply it with each 
-					# vertex, and then convert from meters to pixels with the scale
-					# factor. 
-					# vertices=[(body.GetXForm().R*v)*PPM for v in shape.vertices]
-					vertices=[b2Mul(body.GetXForm(), v)*self.ppm for v in shape.vertices]
+			# for body in world.bodyList: # or: world.bodies
+				# # The body gives us the position and angle of its shapes
+				# for fixture in body.shapeList:
+				# 	# The fixture holds information like density and friction,
+				# 	# and also the shape.
+				# 	shape=fixture#.shape
 
-					# But wait! It's upside-down! Pygame and Box2D orient their
-					# axes in different ways. Box2D is just like how you learned
-					# in high school, with positive x and y directions going
-					# right and up. Pygame, on the other hand, increases in the
-					# right and downward directions. This means we must flip
-					# the y components.
-					vertices=[(v[0], self.height-v[1]) for v in vertices]
+				# 	# Naively assume that this is a polygon shape. (not good normally!)
+				# 	# We take the body's transform and multiply it with each 
+				# 	# vertex, and then convert from meters to pixels with the scale
+				# 	# factor. 
+				# 	# vertices=[(body.GetXForm().R*v)*PPM for v in shape.vertices]
+				# 	vertices=[b2Mul(body.GetXForm(), v)*self.ppm for v in shape.vertices]
 
-					pygame.draw.polygon(screen, (127,127,127,127), vertices)
+				# 	# But wait! It's upside-down! Pygame and Box2D orient their
+				# 	# axes in different ways. Box2D is just like how you learned
+				# 	# in high school, with positive x and y directions going
+				# 	# right and up. Pygame, on the other hand, increases in the
+				# 	# right and downward directions. This means we must flip
+				# 	# the y components.
+				# 	vertices=[(v[0], self.height-v[1]) for v in vertices]
+
+				# 	pygame.draw.polygon(screen, (127,127,127,127), vertices)
 
 
 			# Instruct the world to perform a single step of simulation. It is
