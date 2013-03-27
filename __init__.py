@@ -13,11 +13,10 @@ class World:
 		self.time_step = 1.0 / self.fps
 		self.width, self.height = 640, 480
 
-	def run(self):
 		# --- pygame setup ---
-		screen = pygame.display.set_mode((self.width, self.height), 0, 32)
+		self.screen = pygame.display.set_mode((self.width, self.height), 0, 32)
 		pygame.display.set_caption('Simple pygame example')
-		clock = pygame.time.Clock()
+		self.clock = pygame.time.Clock()
 
 		# Define the size of the world. Simulation will still work
 		# if bodies reach the end of the world, but it will be slower.
@@ -32,7 +31,11 @@ class World:
 		doSleep = True
 
 		# Construct a world object, which will hold and simulate the rigid bodies.
-		world = b2World(worldAABB, gravity, doSleep)
+		self.world = b2World(worldAABB, gravity, doSleep)
+
+	def run(self):
+		world = self.world
+		screen = self.screen
 
 		# Define the ground body.
 		groundBodyDef = b2BodyDef()
@@ -123,9 +126,10 @@ class World:
 			angle = body.GetAngle()
 
 			pygame.display.flip()
-			clock.tick(self.fps)
+			self.clock.tick(self.fps)
 
-		pygame.quit()
+if __name__ == "__main__":
+	world = World()
+	world.run()
 
-world = World()
-world.run()
+	pygame.quit()
