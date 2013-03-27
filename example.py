@@ -15,6 +15,7 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 
 # --- pygame setup ---
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+pygame.display.set_caption('Simple pygame example')
 clock = pygame.time.Clock()
 
 # Define the size of the world. Simulation will still work
@@ -122,7 +123,5 @@ while running:
 
   pygame.display.flip()
   clock.tick(TARGET_FPS)
-
-  print position.x, position.y, angle
 
 pygame.quit()
