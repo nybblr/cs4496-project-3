@@ -4,7 +4,7 @@ from pygame.locals import *
 from Box2D import *
 
 class Shape:
-	def __init__(self, game, body=None, color=(255,255,255,255), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0):
+	def __init__(self, game, body=None, color=(0,0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0):
 		self.game = game
 		self.color = color
 
@@ -48,29 +48,35 @@ class Shape:
 			self.body = body
 
 	@classmethod
-	def initGround(klass, game):
+	def initWalls(klass, game):
 		world = game.world
 
-		# Define the ground body.
-		groundBodyDef = b2BodyDef()
-		groundBodyDef.position.Set(0.0, -5.0)
-		groundBodyDef.mass = 0
+		walls = (
+				((0.0, -1.0), (game.width/game.ppm, 1.0)),
+				((0.0, game.height/game.ppm+1.0), (game.width/game.ppm, 1.0)),
+				((-1.0, 0.0), (1.0, game.height/game.ppm)),
+				((game.width/game.ppm+1.0, 0.0), (1.0, game.height/game.ppm)),
+		)
 
-		# Call the body factory which allocates memory for the ground body
-		# from a pool and creates the ground box shape (also from a pool).
-		# The body is also added to the world.
-		groundBody = world.CreateBody(groundBodyDef)
+		for wallParams in walls:
+			# Define the wall.
+			wallDef = b2BodyDef()
+			wallDef.position.Set(*wallParams[0])
+			wallDef.mass = 0
 
-		# Define the ground box shape.
-		groundShapeDef = b2PolygonDef()
+			wall = world.CreateBody(wallDef)
 
-		# The extents are the half-widths of the box.
-		groundShapeDef.SetAsBox(50.0, 10.0)
+			# Define the box shape.
+			wallShape = b2PolygonDef()
 
-		# Add the ground shape to the ground body.
-		groundBody.CreateShape(groundShapeDef)
+			# The extents are the half-widths of the box.
+			wallShape.SetAsBox(*(wallParams[1]))
 
-		return klass(game, groundBody, (127,127,127,127))
+			# Add the shape to the body.
+			wall.CreateShape(wallShape)
+
+
+		# return klass(game, groundBody, (127,127,127,127))
 
 	def draw(self):
 		body = self.body

@@ -16,9 +16,17 @@ class Game:
 		self.width, self.height = 640, 480
 
 		# --- pygame setup ---
+		pygame.init()
+
 		self.screen = pygame.display.set_mode((self.width, self.height), 0, 32)
 		pygame.display.set_caption('Simple pygame example')
 		self.clock = pygame.time.Clock()
+
+		self.fonts = dict()
+		self.fonts['title'] = pygame.font.Font('fonts/pushups.otf', 50)
+
+		self.colors = dict()
+		self.colors['background'] = (255,255,255)
 
 		# Define the size of the world. Simulation will still work
 		# if bodies reach the end of the world, but it will be slower.
@@ -41,12 +49,10 @@ class Game:
 		world = self.world
 		screen = self.screen
 		shapes = self.shapes
+		colors = self.colors
 
-		# Define the ground body.
-		ground = Shape.initGround(self)
-
-		# Add shape
-		shapes.append(ground)
+		# Define the walls.
+		Shape.initWalls(self)
 
 		# Define the dynamic body.
 		body1 = Shape(self,
@@ -94,7 +100,10 @@ class Game:
 				if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
 					running = False
 
-			screen.fill((0, 0, 0, 0))
+			screen.fill(colors['background'])
+
+			title = self.fonts['title'].render('Hello there!', True, (0,0,0))
+			screen.blit(title, (20, 20))
 
 			for shape in shapes:
 				shape.draw()
