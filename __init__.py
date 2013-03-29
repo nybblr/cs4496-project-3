@@ -49,15 +49,26 @@ class Game:
 		shapes.append(ground)
 
 		# Define the dynamic body.
-		body = Shape(self,
+		body1 = Shape(self,
 				kind = "box",
-				position = (0.0, 23.0),
+				position = (15.0, 20.0),
 				params = (1.0, 1.0),
 				restitution = 0.5
 		)
 
 		# Add shape
-		shapes.append(body)
+		shapes.append(body1)
+
+		# Define another body
+		body2 = Shape(self,
+				kind = "box",
+				position = (15.5, 23.0),
+				params = (1.0, 1.0),
+				restitution = 0.8
+		)
+
+		# Add shape
+		shapes.append(body2)
 
 		# Prepare for simulation. Typically we use a time step of 1/60 of a
 		# second (60Hz) and 10 iterations. This provides a high quality simulation
