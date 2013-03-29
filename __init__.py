@@ -70,6 +70,17 @@ class Game:
 		# Add shape
 		shapes.append(body2)
 
+		# Define another body
+		body3 = Shape(self,
+				kind = "circle",
+				position = (16, 15.0),
+				params = 1.0,
+				restitution = 0.8
+		)
+
+		# Add shape
+		shapes.append(body3)
+
 		# Prepare for simulation. Typically we use a time step of 1/60 of a
 		# second (60Hz) and 10 iterations. This provides a high quality simulation
 		# in most game scenarios.
@@ -94,6 +105,14 @@ class Game:
 
 			pygame.display.flip()
 			self.clock.tick(self.fps)
+
+	def toScreenCoords(self, coords):
+		# Scale and flip
+		return coords[0]*self.ppm, game.height-(coords[1]*self.ppm)
+
+	def toWorldCoords(self, coords):
+		# Scale and flip
+		return coords[0]/self.ppm, (game.height-coords[1])/self.ppm
 
 if __name__ == "__main__":
 	game = Game()

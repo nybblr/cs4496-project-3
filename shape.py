@@ -14,8 +14,18 @@ class Shape:
 			bodyDef.position.Set(*position)
 			bodyNew = game.world.CreateBody(bodyDef)
 
-			# Define another box shape for our dynamic body.
+			# Define another shape for our dynamic body.
 			shapeDef = b2PolygonDef()
+
+			if kind is "box":
+				shapeDef.SetAsBox(*params)
+			elif kind is "polygon":
+				shapeDef.setVertices(params)
+			elif kind is "circle":
+				shapeDef = b2CircleDef()
+				shapeDef.radius = params
+			else:
+				pass
 
 			# Set the density to be non-zero, so it will be dynamic.
 			shapeDef.density = density
@@ -25,13 +35,6 @@ class Shape:
 
 			# Set the restitution constant for bounce
 			shapeDef.restitution = restitution
-
-			if kind is "box":
-				shapeDef.SetAsBox(*params)
-			elif kind is "polygon":
-				shapeDef.setVertices(params)
-			else:
-				pass
 
 			# Add the shape to the body.
 			bodyNew.CreateShape(shapeDef)
@@ -75,8 +78,12 @@ class Shape:
 		screen = self.game.screen
 
 		for shape in body.shapeList:
-			vertices = [b2Mul(body.GetXForm(), v)*game.ppm for v in shape.vertices]
+			if type(shape) is b2CircleShape:
+				pos = game.toScreenCoords(body.position)
+				pos = tuple([int(x) for x in pos])
+				pygame.draw.circle(screen, self.color, pos, int(shape.radius*game.ppm))
+			else:
+				vertices = [b2Mul(body.GetXForm(), v)*game.ppm for v in shape.vertices]
+				vertices = [(v[0], game.height-v[1]) for v in vertices]
+				pygame.draw.polygon(screen, self.color, vertices)
 
-			vertices = [(v[0], game.height-v[1]) for v in vertices]
-
-			pygame.draw.polygon(screen, self.color, vertices)
