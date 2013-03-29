@@ -17,7 +17,7 @@ class Game:
 		self.fps = 60
 		self.time_step = 1.0 / self.fps
 		self.width, self.height = 640, 480
-		self.grid = 1.0 # grid cell size in world coords
+		self.grid = 0.5 # grid cell size in world coords
 
 		# --- pygame setup ---
 		pygame.init()
