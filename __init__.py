@@ -7,6 +7,9 @@ import physics
 import draw
 from shape import *
 
+from block import *
+from paddle import *
+
 class Game:
 	def __init__(self):
 		# --- constants ---
@@ -14,6 +17,7 @@ class Game:
 		self.fps = 60
 		self.time_step = 1.0 / self.fps
 		self.width, self.height = 640, 480
+		self.grid = 1.0 # grid cell size in world coords
 
 		# --- pygame setup ---
 		pygame.init()
@@ -44,15 +48,19 @@ class Game:
 		self.world = b2World(worldAABB, gravity, doSleep)
 
 		self.shapes = []
+		self.blocks = []
 
 	def run(self):
 		world = self.world
 		screen = self.screen
 		shapes = self.shapes
+		blocks = self.blocks
 		colors = self.colors
 
 		# Define the walls.
 		Shape.initWalls(self)
+
+		blocks.append(Block(self, (10, 24), (127,127,127)))
 
 		# Define the dynamic body.
 		body1 = Shape(self,
@@ -107,6 +115,9 @@ class Game:
 
 			for shape in shapes:
 				shape.draw()
+
+			for block in blocks:
+				block.draw()
 
 			# Instruct the world to perform a single step of simulation. It is
 			# generally best to keep the time step and iterations fixed.
