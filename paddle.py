@@ -1,10 +1,11 @@
 from shape import *
 
 class Paddle:
-    def __init__(self, game):
+    def __init__(self, game, height, angle):
         self.game = game
-        self.position = (1,0.1)
+        self.position = (5, height)
         self.color = (197,147,83)
+        self.angle = angle
         
         # Define the dynamic body. We set its position and call the body factory.
         bodyDef = b2BodyDef()
@@ -13,17 +14,16 @@ class Paddle:
 
         # Define another shape for our dynamic body.
         shapeDef = b2PolygonDef()
-
-        shapeDef.setVertices([(0.0,0.0),(4.0,0.0),(4.0,0.5),(0.0,0.5)])
+        shapeDef.setVertices([(-2.0,0.0),(2.0,0.0),(2.0,0.5),(-2.0,0.5)])
 
         # Set the density to be non-zero, so it will be dynamic.
-        shapeDef.density = 10.0
+        shapeDef.density = 100.0
 
         # Override the default friction.
         shapeDef.friction = 0.0
 
         # Set the restitution constant for bounce
-        shapeDef.restitution = 1.1
+        shapeDef.restitution = 1.5
 
         # Add the shape to the body.
         bodyNew.CreateShape(shapeDef)
@@ -33,12 +33,27 @@ class Paddle:
 
         self.body = bodyNew
 
+        # Restrict paddle along the x axis
+        lineJointDef = b2LineJointDef()
+        lineJointDef.Initialize(game.walls[0], self.body, self.body.position, (1,0))
+        self.lineJoint = game.world.CreateJoint(lineJointDef)
+        self.lineJointDef = lineJointDef
+
     def move(self, linearX, angularY):
         deltaX = self.body.position[0] - linearX
         self.body.SetLinearVelocity(b2Vec2(-2*deltaX,0))
-        #if self.body.position[1] < 2 and self.body.position[1] > -0.5:
-        #    self.body.SetAngularVelocity(angularY)
-        self.body.SetAngularVelocity(angularY)
+        if self.body.GetAngle() > -self.angle and self.body.GetAngle() < self.angle:
+            self.body.SetAngularVelocity(angularY)
+        elif self.body.GetAngle() >= self.angle and angularY < 0:
+            self.body.SetAngularVelocity(angularY)
+        elif self.body.GetAngle() <= -self.angle and angularY > 0:
+            self.body.SetAngularVelocity(angularY)
+        elif self.body.GetAngle() >= self.angle:
+            self.body.setAngle(self.angle)
+        elif self.body.GetAngle() <= -self.angle:
+            self.body.setAngle(-self.angle)
+        else:
+            self.body.SetAngularVelocity(0)
 
     def draw(self):
         body = self.body

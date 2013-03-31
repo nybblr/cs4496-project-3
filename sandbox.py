@@ -46,6 +46,7 @@ class Game:
                 self.world = b2World(worldAABB, gravity, doSleep)
 
                 self.shapes = []
+                self.walls = []
 
         def run(self):
                 world = self.world
@@ -126,7 +127,7 @@ class Game:
                 shapes.append(body6)
 
                 # Define another body
-                paddle = Paddle(self)
+                paddle = Paddle(self, 1, 0.5) # Takes in a height and a max angle in Radians
 
                 block = pygame.image.load("CoinBlock.jpg").convert()
                 block = pygame.transform.scale(block, (50, 50))

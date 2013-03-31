@@ -49,6 +49,7 @@ class Game:
 
 		self.shapes = []
 		self.blocks = []
+		self.walls = []
 
 	def run(self):
 		world = self.world

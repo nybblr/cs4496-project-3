@@ -58,13 +58,16 @@ class Shape:
 				((game.width/game.ppm+1.0, 0.0), (1.0, game.height/game.ppm)),
 		)
 
-		for wallParams in walls:
+		for wallParams in walls:			
+
 			# Define the wall.
 			wallDef = b2BodyDef()
 			wallDef.position.Set(*wallParams[0])
 			wallDef.mass = 0
 
 			wall = world.CreateBody(wallDef)
+
+			game.walls.append(wall)
 
 			# Define the box shape.
 			wallShape = b2PolygonDef()
