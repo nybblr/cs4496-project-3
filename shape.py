@@ -52,40 +52,6 @@ class Shape:
 		else:
 			self.body = body
 
-	@classmethod
-	def initWalls(klass, game):
-		world = game.world
-
-		walls = (
-				((0.0, -1.0), (game.mwidth, 1.0)),
-				((0.0, game.mheight+1.0), (game.mwidth, 1.0)),
-				((-1.0, 0.0), (1.0, game.mheight)),
-				((game.mwidth+1.0, 0.0), (1.0, game.mheight)),
-		)
-
-		# walls = (
-		# 		((0,0), (game.width/game.ppm,0)),
-		# 		((0,0), (0,game.height/game.ppm)),
-		# 		((game.width/game.ppm,0), (game.width/game.ppm,game.height/game.ppm)),
-		# )
-
-		for wallParams in walls:
-			# wall = Shape(game,
-			# 		kind = "line",
-			# 		params = wallParams,
-			# )
-
-			wall = Shape(game,
-					kind = 'box',
-					position = wallParams[0],
-					params = wallParams[1],
-					density = 0,
-			)
-
-			game.walls.append(wall)
-
-		# return klass(game, groundBody, (127,127,127,127))
-
 	def draw(self):
 		body = self.body
 		game = self.game

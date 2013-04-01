@@ -61,11 +61,41 @@ class Game:
 		# self.paddle = None
 
 		# Define the walls.
-		Shape.initWalls(self)
+		self.initWalls()
 
 		# Define the paddle.
 		self.paddle = Paddle(self, 1, 0.5)
 
+	def initWalls(self):
+		world = self.world
+
+		walls = (
+				((0.0, -1.0), (self.mwidth, 1.0)),
+				((0.0, self.mheight+1.0), (self.mwidth, 1.0)),
+				((-1.0, 0.0), (1.0, self.mheight)),
+				((self.mwidth+1.0, 0.0), (1.0, self.mheight)),
+		)
+
+		# walls = (
+		# 		((0,0), (game.width/game.ppm,0)),
+		# 		((0,0), (0,game.height/game.ppm)),
+		# 		((game.width/game.ppm,0), (game.width/game.ppm,game.height/game.ppm)),
+		# )
+
+		for wallParams in walls:
+			# wall = Shape(game,
+			# 		kind = "line",
+			# 		params = wallParams,
+			# )
+
+			wall = Shape(self,
+					kind = 'box',
+					position = wallParams[0],
+					params = wallParams[1],
+					density = 0,
+			)
+
+			self.walls.append(wall)
 
 	def run(self):
 		world = self.world
