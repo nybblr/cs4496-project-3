@@ -20,10 +20,10 @@ class Game:
 		self.time_step = 1.0 / self.fps
 		self.width, self.height = 640, 480
 
-		self.gwidth = self.width / self.grid
-		self.gheight = self.height / self.grid
 		self.mwidth = self.width / self.ppm
 		self.mheight = self.height / self.ppm
+		self.gwidth = self.mwidth / self.grid
+		self.gheight = self.mheight / self.grid
 
 		# --- pygame setup ---
 		pygame.init()

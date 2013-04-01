@@ -9,6 +9,9 @@ class Level:
 		self.game = game
 
 	def initFromFile(self, filename, offset=(0,0)):
+		game = self.game
+		blocks = self.blocks
+
 		sprite = pygame.image.load(filename)
 
 		for x in range(sprite.get_width()):
@@ -16,8 +19,8 @@ class Level:
 				color = sprite.get_at((x, y))
 
 				if color[3] is not 0:
-					self.blocks.append(Block(
-						self.game,
-						(x+offset[0], y+offset[1]),
+					blocks.append(Block(
+						game,
+						(x+offset[0], game.gheight-y-offset[1]),
 						(color[0], color[1], color[2])
 					))
