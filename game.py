@@ -70,7 +70,7 @@ class Game:
 		world = self.world
 
 		walls = (
-				((0.0, -1.0), (self.mwidth, 1.0)),
+				# ((0.0, -1.0), (self.mwidth, 1.0)),
 				((0.0, self.mheight+1.0), (self.mwidth, 1.0)),
 				((-1.0, 0.0), (1.0, self.mheight)),
 				((self.mwidth+1.0, 0.0), (1.0, self.mheight)),
