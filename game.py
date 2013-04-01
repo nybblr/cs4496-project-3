@@ -135,8 +135,8 @@ class Game:
 		# Define another body
 		body3 = Shape(self,
 				kind = "circle",
-				position = (18, 15.0),
-				params = 1.0,
+				position = (18, 5.0),
+				params = self.grid,
 				restitution = 0.8
 		)
 
