@@ -18,9 +18,13 @@ class Level:
 			for y in range(sprite.get_height()):
 				color = sprite.get_at((x, y))
 
+				rgb = (color[0], color[1], color[2])
+				density = 0 if color[3] is 255 else color[3]
+
 				if color[3] is not 0:
 					blocks.append(Block(
 						game,
-						(x+offset[0], game.gheight-y-offset[1]),
-						(color[0], color[1], color[2])
+						position = (x+offset[0]+game.grid/2.0, game.gheight-y-offset[1]-game.grid/2.0),
+						color = rgb,
+						density = density,
 					))
