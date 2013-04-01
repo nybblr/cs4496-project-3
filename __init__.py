@@ -7,6 +7,7 @@ import physics
 import draw
 from shape import *
 
+from level import *
 from block import *
 from paddle import *
 
@@ -14,10 +15,15 @@ class Game:
 	def __init__(self):
 		# --- constants ---
 		self.ppm = 20.0 # pixels per meter
+		self.grid = 0.5 # grid cell size in world coords
 		self.fps = 60
 		self.time_step = 1.0 / self.fps
 		self.width, self.height = 640, 480
-		self.grid = 0.5 # grid cell size in world coords
+
+		self.gwidth = self.width / self.grid
+		self.gheight = self.height / self.grid
+		self.mwidth = self.width / self.ppm
+		self.mheight = self.height / self.ppm
 
 		# --- pygame setup ---
 		pygame.init()
@@ -50,6 +56,7 @@ class Game:
 		self.shapes = []
 		self.blocks = []
 		self.walls = []
+		self.levels = []
 
 	def run(self):
 		world = self.world
@@ -61,40 +68,43 @@ class Game:
 		# Define the walls.
 		Shape.initWalls(self)
 
-		blocks.append(Block(self, (10, 24), (127,127,127)))
+		# blocks.append(Block(self, (10, 24), (127,127,127)))
+		level = Level(self)
+		level.initFromFile('sprites/mario.png')
 
-		# Define the dynamic body.
-		body1 = Shape(self,
-				kind = "box",
-				position = (15.0, 20.0),
-				params = (1.0, 1.0),
-				restitution = 0.5
-		)
 
-		# Add shape
-		shapes.append(body1)
+		# # Define the dynamic body.
+		# body1 = Shape(self,
+		# 		kind = "box",
+		# 		position = (15.0, 20.0),
+		# 		params = (1.0, 1.0),
+		# 		restitution = 0.5
+		# )
 
-		# Define another body
-		body2 = Shape(self,
-				kind = "box",
-				position = (15.5, 23.0),
-				params = (1.0, 1.0),
-				restitution = 0.8
-		)
+		# # Add shape
+		# shapes.append(body1)
 
-		# Add shape
-		shapes.append(body2)
+		# # Define another body
+		# body2 = Shape(self,
+		# 		kind = "box",
+		# 		position = (15.5, 23.0),
+		# 		params = (1.0, 1.0),
+		# 		restitution = 0.8
+		# )
 
-		# Define another body
-		body3 = Shape(self,
-				kind = "circle",
-				position = (16, 15.0),
-				params = 1.0,
-				restitution = 0.8
-		)
+		# # Add shape
+		# shapes.append(body2)
 
-		# Add shape
-		shapes.append(body3)
+		# # Define another body
+		# body3 = Shape(self,
+		# 		kind = "circle",
+		# 		position = (16, 15.0),
+		# 		params = 1.0,
+		# 		restitution = 0.8
+		# )
+
+		# # Add shape
+		# shapes.append(body3)
 
 		# Prepare for simulation. Typically we use a time step of 1/60 of a
 		# second (60Hz) and 10 iterations. This provides a high quality simulation
@@ -118,6 +128,9 @@ class Game:
 				shape.draw()
 
 			for block in blocks:
+				block.draw()
+
+			for block in level.blocks:
 				block.draw()
 
 			# Instruct the world to perform a single step of simulation. It is

@@ -57,10 +57,10 @@ class Shape:
 		world = game.world
 
 		walls = (
-				((0.0, -1.0), (game.width/game.ppm, 1.0)),
-				((0.0, game.height/game.ppm+1.0), (game.width/game.ppm, 1.0)),
-				((-1.0, 0.0), (1.0, game.height/game.ppm)),
-				((game.width/game.ppm+1.0, 0.0), (1.0, game.height/game.ppm)),
+				((0.0, -1.0), (game.mwidth, 1.0)),
+				((0.0, game.mheight+1.0), (game.mwidth, 1.0)),
+				((-1.0, 0.0), (1.0, game.mheight)),
+				((game.mwidth+1.0, 0.0), (1.0, game.mheight)),
 		)
 
 		# walls = (
@@ -81,6 +81,8 @@ class Shape:
 					params = wallParams[1],
 					density = 0,
 			)
+
+			game.walls.append(wall)
 
 		# return klass(game, groundBody, (127,127,127,127))
 

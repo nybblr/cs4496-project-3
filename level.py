@@ -8,7 +8,7 @@ class Level:
 		self.blocks = list()
 		self.game = game
 
-	def initFromFile(self, filename, offset):
+	def initFromFile(self, filename, offset=(0,0)):
 		sprite = pygame.image.load(filename)
 
 		for x in range(sprite.get_width()):
