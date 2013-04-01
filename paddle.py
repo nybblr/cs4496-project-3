@@ -35,7 +35,7 @@ class Paddle:
 
         # Restrict paddle along the x axis
         lineJointDef = b2LineJointDef()
-        lineJointDef.Initialize(game.walls[0], self.body, self.body.position, (1,0))
+        lineJointDef.Initialize(game.walls[0].body, self.body, self.body.position, (1,0))
         self.lineJoint = game.world.CreateJoint(lineJointDef)
         self.lineJointDef = lineJointDef
 

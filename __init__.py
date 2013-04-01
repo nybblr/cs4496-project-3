@@ -57,7 +57,14 @@ class Game:
 		self.blocks = []
 		self.walls = []
 		self.levels = []
+		# self.paddle = None
+
+		# Define the walls.
+		Shape.initWalls(self)
+
+		# Define the paddle.
 		self.paddle = Paddle(self, 1, 0.5)
+
 
 	def run(self):
 		world = self.world
@@ -65,9 +72,7 @@ class Game:
 		shapes = self.shapes
 		blocks = self.blocks
 		colors = self.colors
-
-		# Define the walls.
-		Shape.initWalls(self)
+		paddle = self.paddle
 
 		# blocks.append(Block(self, (10, 24), (127,127,127)))
 		level = Level(self)
@@ -112,6 +117,8 @@ class Game:
 		# in most game scenarios.
 		timeStep = 1.0 / 60.0
 		iterations = 10
+
+		(oldMouseX, oldMouseY) = pygame.mouse.get_pos()
 
 		# This is our little game loop.
 		running = True

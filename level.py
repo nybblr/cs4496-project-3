@@ -19,7 +19,7 @@ class Level:
 				color = sprite.get_at((x, y))
 
 				rgb = (color[0], color[1], color[2])
-				density = 0 if color[3] is 255 else color[3]
+				density = 0 if color[3] is 255 else color[3]/255.0
 
 				if color[3] is not 0:
 					blocks.append(Block(
