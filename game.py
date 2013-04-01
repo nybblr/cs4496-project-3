@@ -105,35 +105,11 @@ class Game:
 		colors = self.colors
 		paddle = self.paddle
 
-		# blocks.append(Block(self, (10, 24), (127,127,127)))
 		level = Level(self)
 		level.initFromFile('sprites/mario-stable.png', (12, 4))
 
-
-		# # Define the dynamic body.
-		# body1 = Shape(self,
-		# 		kind = "box",
-		# 		position = (15.0, 20.0),
-		# 		params = (1.0, 1.0),
-		# 		restitution = 0.5
-		# )
-
-		# # Add shape
-		# shapes.append(body1)
-
-		# # Define another body
-		# body2 = Shape(self,
-		# 		kind = "box",
-		# 		position = (15.5, 23.0),
-		# 		params = (1.0, 1.0),
-		# 		restitution = 0.8
-		# )
-
-		# # Add shape
-		# shapes.append(body2)
-
 		# Define another body
-		body3 = Shape(self,
+		ball = Shape(self,
 				kind = "circle",
 				position = (18, 5.0),
 				params = self.grid,
@@ -141,7 +117,7 @@ class Game:
 		)
 
 		# Add shape
-		shapes.append(body3)
+		shapes.append(ball)
 
 		# Prepare for simulation. Typically we use a time step of 1/60 of a
 		# second (60Hz) and 10 iterations. This provides a high quality simulation
@@ -149,9 +125,8 @@ class Game:
 		timeStep = 1.0 / 60.0
 		iterations = 10
 
-		(oldMouseX, oldMouseY) = pygame.mouse.get_pos()
-
 		# This is our little game loop.
+		(oldMouseX, oldMouseY) = pygame.mouse.get_pos()
 		running = True
 		while running:
 			for event in pygame.event.get():
