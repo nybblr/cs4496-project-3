@@ -57,6 +57,7 @@ class Game:
 		self.blocks = []
 		self.walls = []
 		self.levels = []
+		self.paddle = Paddle(self, 1, 0.5)
 
 	def run(self):
 		world = self.world
@@ -70,7 +71,7 @@ class Game:
 
 		# blocks.append(Block(self, (10, 24), (127,127,127)))
 		level = Level(self)
-		level.initFromFile('sprites/mario.png')
+		level.initFromFile('sprites/mario-stable.png')
 
 
 		# # Define the dynamic body.
@@ -95,16 +96,16 @@ class Game:
 		# # Add shape
 		# shapes.append(body2)
 
-		# # Define another body
-		# body3 = Shape(self,
-		# 		kind = "circle",
-		# 		position = (16, 15.0),
-		# 		params = 1.0,
-		# 		restitution = 0.8
-		# )
+		# Define another body
+		body3 = Shape(self,
+				kind = "circle",
+				position = (16, 15.0),
+				params = 1.0,
+				restitution = 0.8
+		)
 
-		# # Add shape
-		# shapes.append(body3)
+		# Add shape
+		shapes.append(body3)
 
 		# Prepare for simulation. Typically we use a time step of 1/60 of a
 		# second (60Hz) and 10 iterations. This provides a high quality simulation
@@ -132,6 +133,14 @@ class Game:
 
 			for block in level.blocks:
 				block.draw()
+
+			(mouseX, mouseY) = pygame.mouse.get_pos()
+
+			paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
+			paddle.draw()
+
+			oldMouseX = mouseX
+			oldMouseY = mouseY
 
 			# Instruct the world to perform a single step of simulation. It is
 			# generally best to keep the time step and iterations fixed.
