@@ -13,9 +13,16 @@ class Game:
         def __init__(self):
                 # --- constants ---
                 self.ppm = 20.0 # pixels per meter
+                self.grid = 1.0 / 1.5 # grid cell size in world coords
                 self.fps = 60
+                self.warp = 0.75 # simulation speed ratio
                 self.time_step = 1.0 / self.fps
                 self.width, self.height = 640, 480
+
+                self.mwidth = self.width / self.ppm
+                self.mheight = self.height / self.ppm
+                self.gwidth = self.mwidth / self.grid
+                self.gheight = self.mheight / self.grid
 
                 # --- pygame setup ---
                 pygame.init()
@@ -46,7 +53,47 @@ class Game:
                 self.world = b2World(worldAABB, gravity, doSleep)
 
                 self.shapes = []
+                self.blocks = []
                 self.walls = []
+                self.levels = []
+                # self.paddle = None
+
+                # Define the walls.
+                self.initWalls()
+
+                # Define the paddle.
+                self.paddle = Paddle(self, 1, 0.5)
+
+        def initWalls(self):
+                world = self.world
+
+                walls = (
+                                # ((0.0, -1.0), (self.mwidth, 1.0)),
+                                ((0.0, self.mheight+1.0), (self.mwidth, 1.0)),
+                                ((-1.0, 0.0), (1.0, self.mheight)),
+                                ((self.mwidth+1.0, 0.0), (1.0, self.mheight)),
+                )
+
+                # walls = (
+                #               ((0,0), (game.width/game.ppm,0)),
+                #               ((0,0), (0,game.height/game.ppm)),
+                #               ((game.width/game.ppm,0), (game.width/game.ppm,game.height/game.ppm)),
+                # )
+
+                for wallParams in walls:
+                        # wall = Shape(game,
+                        #               kind = "line",
+                        #               params = wallParams,
+                        # )
+
+                        wall = Shape(self,
+                                        kind = 'box',
+                                        position = wallParams[0],
+                                        params = wallParams[1],
+                                        density = 0,
+                        )
+
+                        self.walls.append(wall)
 
         def run(self):
                 world = self.world
@@ -55,7 +102,7 @@ class Game:
                 colors = self.colors
 
                 # Define the walls.
-                Shape.initWalls(self)
+                self.initWalls()
 
                 # Define the dynamic body.
                 body1 = Shape(self,
@@ -126,10 +173,7 @@ class Game:
                 # Add shape
                 shapes.append(body6)
 
-                # Define another body
-                paddle = Paddle(self, 1, 0.5) # Takes in a height and a max angle in Radians
-
-                block = pygame.image.load("CoinBlock.jpg").convert()
+                block = pygame.image.load("sprites/CoinBlock.jpg").convert()
                 block = pygame.transform.scale(block, (50, 50))
                 blockrect = block.get_rect()
 
@@ -168,8 +212,8 @@ class Game:
                         for shape in shapes:
                                 shape.draw()
 
-                        paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
-                        paddle.draw()
+                        self.paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
+                        self.paddle.draw()
 
                         # Instruct the world to perform a single step of simulation. It is
                         # generally best to keep the time step and iterations fixed.

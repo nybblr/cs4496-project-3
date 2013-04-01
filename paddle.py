@@ -3,7 +3,7 @@ from shape import *
 class Paddle:
     def __init__(self, game, height, angle):
         self.game = game
-        self.position = (5, height)
+        self.position = (10, height)
         self.color = (197,147,83)
         self.angle = angle
         
@@ -31,6 +31,9 @@ class Paddle:
         # Now tell the dynamic body to compute it's mass properties base on its shape.
         bodyNew.SetMassFromShapes()
 
+		# Stops the paddle from sleeping when not moving
+        bodyNew.AllowSleeping(False)
+
         self.body = bodyNew
 
         # Restrict paddle along the x axis
@@ -40,8 +43,16 @@ class Paddle:
         self.lineJointDef = lineJointDef
 
     def move(self, linearX, angularY):
-        deltaX = self.body.position[0] - linearX
-        self.body.SetLinearVelocity(b2Vec2(-2*deltaX,0))
+        deltaX = linearX - self.body.position[0]
+        if self.body.position[0] > 3 and self.body.position[0] < self.game.mwidth - 3:
+            self.body.SetLinearVelocity(b2Vec2(50*deltaX,0))
+        elif self.body.position[0] <= 3 and deltaX > 0:
+            self.body.SetLinearVelocity(b2Vec2(50*deltaX,0))
+        elif self.body.position[0] >= self.game.mwidth - 3 and deltaX < 0:
+            self.body.SetLinearVelocity(b2Vec2(50*deltaX,0))
+        else:
+            self.body.SetLinearVelocity(b2Vec2(0,0))
+            
         if self.body.GetAngle() > -self.angle and self.body.GetAngle() < self.angle:
             self.body.SetAngularVelocity(angularY)
         elif self.body.GetAngle() >= self.angle and angularY < 0:
