@@ -15,7 +15,7 @@ class Game:
 	def __init__(self):
 		# --- constants ---
 		self.ppm = 20.0 # pixels per meter
-		self.grid = 1.0 # grid cell size in world coords
+		self.grid = 1.0 / 1.5 # grid cell size in world coords
 		self.fps = 60
 		self.time_step = 1.0 / self.fps
 		self.width, self.height = 640, 480
@@ -76,7 +76,7 @@ class Game:
 
 		# blocks.append(Block(self, (10, 24), (127,127,127)))
 		level = Level(self)
-		level.initFromFile('sprites/mario-stable.png')
+		level.initFromFile('sprites/mario-stable.png', (12, 4))
 
 
 		# # Define the dynamic body.
@@ -104,7 +104,7 @@ class Game:
 		# Define another body
 		body3 = Shape(self,
 				kind = "circle",
-				position = (16, 15.0),
+				position = (18, 15.0),
 				params = 1.0,
 				restitution = 0.8
 		)
