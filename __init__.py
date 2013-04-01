@@ -17,6 +17,7 @@ class Game:
 		self.ppm = 20.0 # pixels per meter
 		self.grid = 1.0 / 1.5 # grid cell size in world coords
 		self.fps = 60
+		self.warp = 0.75 # simulation speed ratio
 		self.time_step = 1.0 / self.fps
 		self.width, self.height = 640, 480
 
@@ -151,7 +152,7 @@ class Game:
 
 			# Instruct the world to perform a single step of simulation. It is
 			# generally best to keep the time step and iterations fixed.
-			world.Step(timeStep, iterations, iterations)
+			world.Step(timeStep * self.warp, iterations, iterations)
 
 			pygame.display.flip()
 			self.clock.tick(self.fps)
