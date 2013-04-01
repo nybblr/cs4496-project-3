@@ -15,11 +15,16 @@ class Shape:
 			bodyNew = game.world.CreateBody(bodyDef)
 
 			# Define another shape for our dynamic body.
-			shapeDef = b2PolygonDef()
+			shapeDef = None
 
 			if kind is "box":
+				shapeDef = b2PolygonDef()
 				shapeDef.SetAsBox(*params)
 			elif kind is "polygon":
+				shapeDef = b2PolygonDef()
+				shapeDef.setVertices(params)
+			elif kind is "line":
+				shapeDef = b2PolygonDef()
 				shapeDef.setVertices(params)
 			elif kind is "circle":
 				shapeDef = b2CircleDef()
@@ -58,26 +63,24 @@ class Shape:
 				((game.width/game.ppm+1.0, 0.0), (1.0, game.height/game.ppm)),
 		)
 
-		for wallParams in walls:			
+		# walls = (
+		# 		((0,0), (game.width/game.ppm,0)),
+		# 		((0,0), (0,game.height/game.ppm)),
+		# 		((game.width/game.ppm,0), (game.width/game.ppm,game.height/game.ppm)),
+		# )
 
-			# Define the wall.
-			wallDef = b2BodyDef()
-			wallDef.position.Set(*wallParams[0])
-			wallDef.mass = 0
+		for wallParams in walls:
+			# wall = Shape(game,
+			# 		kind = "line",
+			# 		params = wallParams,
+			# )
 
-			wall = world.CreateBody(wallDef)
-
-			game.walls.append(wall)
-
-			# Define the box shape.
-			wallShape = b2PolygonDef()
-
-			# The extents are the half-widths of the box.
-			wallShape.SetAsBox(*(wallParams[1]))
-
-			# Add the shape to the body.
-			wall.CreateShape(wallShape)
-
+			wall = Shape(game,
+					kind = 'box',
+					position = wallParams[0],
+					params = wallParams[1],
+					density = 0,
+			)
 
 		# return klass(game, groundBody, (127,127,127,127))
 
