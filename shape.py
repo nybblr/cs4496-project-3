@@ -3,7 +3,19 @@ from pygame.locals import *
 
 from Box2D import *
 
+import Queue
+
 class Shape:
+  destroyed = list()
+
+  @classmethod
+  def destroyPending(klass):
+    for item in klass.destroyed:
+      (world, body) = item
+      world.DestroyBody(body)
+
+    klass.destroyed = list()
+
   def __init__(self, game, body=None, color=(0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0, pointer=None):
     self.game = game
     self.color = color
@@ -58,7 +70,14 @@ class Shape:
     else:
       self.body = body
 
+  def destroy(self):
+    self.__class__.destroyed.append((self.game.world, self.body))
+    self.body = None
+
   def draw(self, alpha=1.0):
+    if not self.body:
+      return
+
     body = self.body
     game = self.game
     screen = self.game.screen

@@ -27,11 +27,30 @@ class Block:
 
     # Did we kill off static?
     if self.tough is 0:
-      self.static = False
-      self.body.density = self.density
+      if self.static:
+        self.static = False
+        self.body.density = self.density
+      else:
+        self.destroy()
+
+  def destroy(self):
+    if not self.shape:
+      return
+
+    self.shape.destroy()
+    self.shape = None
+    if self in self.game.blocks:
+      self.game.blocks.remove(self)
 
   def draw(self):
-    alpha = (self.tough) / float(self.maxTough)
+    if not self.shape:
+      return
+
+    if self.tough is 0:
+      alpha = 1.0
+    else:
+      alpha = (self.tough) / float(self.maxTough)
+
     self.shape.draw(
         alpha = alpha
     )

@@ -140,6 +140,8 @@ class Game:
         if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
           running = False
 
+      Shape.destroyPending()
+
       if ball.body.position[1] < -5:
         ball.body.SetLinearVelocity((0, 0))
         ball.body.position = (18, 5.0)

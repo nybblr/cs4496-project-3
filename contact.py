@@ -64,7 +64,7 @@ class Contact(b2ContactListener):
       # Try to notify the other object.
       try:
         other.handleCollision(cp)
-      except:
+      except AttributeError:
         print("No collision handler found for "+str(other))
 
     if self.test:
