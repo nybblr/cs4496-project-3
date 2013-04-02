@@ -66,7 +66,6 @@ class Contact(b2ContactListener):
 				other.handleCollision(cp)
 			except:
 				print("No collision handler found for "+str(other))
-				# print("Called from "+str(this))
 
 		if self.test:
 			self.test.points.append(cp)

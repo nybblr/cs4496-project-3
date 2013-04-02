@@ -1,12 +1,14 @@
 from shape import *
 
 class Block:
-	def __init__(self, game, position=(0,0), color=(0,0,0), density=1.0, tough=3):
+	def __init__(self, game, position=(0,0), color=(0,0,0), density=1.0, tough=3, static=False):
 		self.game = game
 		self.position = position
 		self.color = color
 		self.maxTough = tough
 		self.tough = self.maxTough
+		self.density = density
+		self.static = static
 		self.shape = Shape(game,
 				kind = 'box',
 				color = color,
@@ -18,12 +20,10 @@ class Block:
 
 	def handleCollision(self, cp):
 		self.bump()
-		print("I'm a block!")
 
 	def bump(self):
 		if self.tough is not 0:
 			self.tough -= 1
-			print("Bumped! I am "+str(self.tough))
 
 	def draw(self):
 		alpha = (self.tough) / float(self.maxTough)
