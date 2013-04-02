@@ -32,9 +32,6 @@ class Contact(b2ContactListener):
 	def Add(self, point):
 		self.handleCall(Contact.contactAdded, point)
 
-	def BeginContact(self, point):
-		self.handleCall(Contact.contactAdded, point)
-
 	def Persist(self, point):
 		self.handleCall(Contact.contactPersisted, point)
 
