@@ -5,9 +5,10 @@ from Box2D import *
 
 import physics
 import draw
-from shape import *
+from contact import *
 
 from level import *
+from shape import *
 from block import *
 from paddle import *
 
@@ -53,6 +54,10 @@ class Game:
 
 		# Construct a world object, which will hold and simulate the rigid bodies.
 		self.world = b2World(worldAABB, gravity, doSleep)
+
+		self.contact = Contact()
+		self.contact.game = self
+		self.world.SetContactListener = self.contact
 
 		self.shapes = []
 		self.blocks = []
