@@ -71,7 +71,16 @@ class Shape:
 			else:
 				vertices = [b2Mul(body.GetXForm(), v)*game.ppm for v in shape.vertices]
 				vertices = [(v[0], game.height-v[1]) for v in vertices]
-				pygame.draw.polygon(screen, self.toScreenColor(self.color, defaultAlpha=alpha), vertices)
+
+				color = self.applyAlpha(self.color, defaultAlpha=alpha)
+				rgb = self.toScreenColor(color, defaultAlpha=alpha)
+				# rgb = (color[0], color[1], color[2])
+				# alpha = color[3]
+
+				# s = pygame.Surface((game.width,game.height))
+				# s.set_alpha(alpha)
+				pygame.draw.polygon(screen, rgb, vertices)
+				# screen.blit(s, (0,0))
 
 	def toScreenColor(self, color, defaultAlpha=1.0):
 		# Reformat colors
@@ -86,3 +95,19 @@ class Shape:
 
 		sane = (int(r*255), int(g*255), int(b*255), int(a*255))
 		return sane
+
+	def applyAlpha(self, color, defaultAlpha=1.0):
+		r = color[0]
+		g = color[1]
+		b = color[2]
+		a = defaultAlpha
+
+		# Was alpha included?
+		if len(color) is 4:
+			a = color[3]
+
+		r = r*a + (1-a)
+		g = g*a + (1-a)
+		b = b*a + (1-a)
+
+		return (r,g,b)
