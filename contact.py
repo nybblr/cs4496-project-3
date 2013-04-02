@@ -22,6 +22,7 @@ class ContactPoint:
 	"""
 	shape1 = None
 	shape2 = None
+	other = None
 	normal = None
 	position = None
 	velocity = None
@@ -38,16 +39,36 @@ class Contact(b2ContactListener):
 		self.game = game
 
 	def handleCall(self, state, point):
-		# print(point.position)
-		if self.test:
+		ball = self.game.ball
+		obj1 = point.shape1.GetUserData()
+		obj2 = point.shape2.GetUserData()
+
+		# Does the event involve the ball?
+		if obj1 is ball or obj2 is ball:
+			# print(point.position)
+
+			this  = obj2 if obj2 is ball else obj1
+			other = obj2 if obj1 is ball else obj1
+
 			cp          = ContactPoint()
 			cp.shape1   = point.shape1
 			cp.shape2   = point.shape2
+			cp.other    = other
+			cp.this     = this
 			cp.position = point.position.copy()
 			cp.normal   = point.normal.copy()
 			cp.velocity = point.velocity.copy()
 			cp.id       = point.id
 			cp.state    = state
+
+			# Try to notify the other object.
+			try:
+				other.handleCollision(cp)
+			except:
+				print("No collision handler found for "+str(other))
+				# print("Called from "+str(this))
+
+		if self.test:
 			self.test.points.append(cp)
 
 	def Add(self, point):

@@ -11,6 +11,7 @@ class Block:
 				position = (position[0]*game.grid, position[1]*game.grid),
 				params = (game.grid/2.0, game.grid/2.0),
 				density = density,
+				pointer = self,
 		)
 
 	def draw(self):

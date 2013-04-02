@@ -4,7 +4,7 @@ from pygame.locals import *
 from Box2D import *
 
 class Shape:
-	def __init__(self, game, body=None, color=(0,0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0):
+	def __init__(self, game, body=None, color=(0,0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0, pointer=None):
 		self.game = game
 		self.color = color
 
@@ -42,7 +42,13 @@ class Shape:
 			shapeDef.restitution = restitution
 
 			# Add the shape to the body.
-			bodyNew.CreateShape(shapeDef)
+			shape = bodyNew.CreateShape(shapeDef)
+
+			# Point to this shape if no pointer given (for events).
+			data = pointer if pointer else self
+
+			# Set the pointer for quick access (events).
+			shape.SetUserData(data)
 
 			# Now tell the dynamic body to compute it's mass properties base on its shape.
 			bodyNew.SetMassFromShapes()

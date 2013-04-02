@@ -114,12 +114,14 @@ class Game:
 		level.initFromFile('sprites/mario-stable.png', (12, 4))
 
 		# Define another body
-		ball = Shape(self,
+		self.ball = Shape(self,
 				kind = "circle",
 				position = (18, 5.0),
 				params = self.grid,
 				restitution = 0.8
 		)
+
+		ball = self.ball
 
 		# Add shape
 		shapes.append(ball)
