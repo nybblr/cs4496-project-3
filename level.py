@@ -4,27 +4,28 @@ from pygame.locals import *
 from block import *
 
 class Level:
-	def __init__(self, game):
-		self.blocks = list()
-		self.game = game
+  def __init__(self, game):
+    self.blocks = list()
+    self.game = game
 
-	def initFromFile(self, filename, offset=(0,0)):
-		game = self.game
-		blocks = self.blocks
+  def initFromFile(self, filename, offset=(0,0)):
+    game = self.game
+    blocks = self.blocks
 
-		sprite = pygame.image.load(filename)
+    sprite = pygame.image.load(filename)
 
-		for x in range(sprite.get_width()):
-			for y in range(sprite.get_height()):
-				color = sprite.get_at((x, y))
+    for x in range(sprite.get_width()):
+      for y in range(sprite.get_height()):
+        color = sprite.get_at((x, y))
 
-				rgb = (color[0]/255.0, color[1]/255.0, color[2]/255.0)
-				density = 0 if color[3] is 255 else color[3]/50.0
+        rgb = (color[0]/255.0, color[1]/255.0, color[2]/255.0)
+        density = color[3]/50.0
 
-				if color[3] is not 0:
-					blocks.append(Block(
-						game,
-						position = (x+offset[0]+game.grid/2.0, game.gheight-y-offset[1]-game.grid/2.0),
-						color = rgb,
-						density = density,
-					))
+        if color[3] is not 0:
+          blocks.append(Block(
+            game,
+            position = (x+offset[0]+game.grid/2.0, game.gheight-y-offset[1]-game.grid/2.0),
+            color = rgb,
+            density = density,
+            static = color[3] is 255,
+          ))
