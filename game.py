@@ -55,7 +55,7 @@ class Game:
 		# Construct a world object, which will hold and simulate the rigid bodies.
 		self.world = b2World(worldAABB, gravity, doSleep)
 
-		self.contact = Contact()
+		self.contact = Contact(self)
 		self.contact.game = self
 
 		self.world.SetContactListener = self.contact

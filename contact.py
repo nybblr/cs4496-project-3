@@ -9,10 +9,9 @@ class Contact(b2ContactListener):
 	"""
 	Handles all of the contact states passed in from Box2D.
 	"""
-	test = None
-	game = None
-	def __init__(self):
+	def __init__(self, game):
 		super(Contact, self).__init__()
+		self.game = game
 
 	def handleCall(self, state, point):
 		print("Contact!")
@@ -31,10 +30,16 @@ class Contact(b2ContactListener):
 
 	def Add(self, point):
 		self.handleCall(Contact.contactAdded, point)
+		print("Contact!")
 
 	def Persist(self, point):
 		self.handleCall(Contact.contactPersisted, point)
+		print("Contact!")
 
 	def Remove(self, point):
 		self.handleCall(Contact.contactRemoved, point)
+		print("Contact!")
 
+	def Result(self, point):
+		# self.handleCall(Contact.contactRemoved, point)
+		print("Contact!")
