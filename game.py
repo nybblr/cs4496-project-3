@@ -65,12 +65,13 @@ class Game:
 		self.walls = []
 		self.levels = []
 		# self.paddle = None
+		self.lives = 0
 
 		# Define the walls.
 		self.initWalls()
 
 		# Define the paddle.
-		self.paddle = Paddle(self, 1, 0.5)
+		self.paddle = PaddleKey(self, 1, 0.5)
 
 	def initWalls(self):
 		world = self.world
@@ -132,7 +133,7 @@ class Game:
 		iterations = 10
 
 		# This is our little game loop.
-		(oldMouseX, oldMouseY) = pygame.mouse.get_pos()
+		# (oldMouseX, oldMouseY) = pygame.mouse.get_pos()
 		running = True
 		while running:
 			for event in pygame.event.get():
@@ -142,6 +143,7 @@ class Game:
 			if ball.body.position[1] < -5:
 				ball.body.SetLinearVelocity((0, 0))
 				ball.body.position = (18, 5.0)
+				self.lives += 1
 
 			screen.fill(colors['background'])
 
@@ -157,13 +159,32 @@ class Game:
 			for block in level.blocks:
 				block.draw()
 
-			(mouseX, mouseY) = pygame.mouse.get_pos()
+			# (mouseX, mouseY) = pygame.mouse.get_pos()
 
-			paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
+			# paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
+			# paddle.draw()
+
+			# oldMouseX = mouseX
+			# oldMouseY = mouseY
+
+			linMove = 0
+			angMove = 0
+			pressedKeys = pygame.key.get_pressed()
+			if pressedKeys[K_LEFT]:
+				linMove = -1
+			elif pressedKeys[K_RIGHT]:
+				linMove = 1
+
+			if pressedKeys[K_s]:
+				angMove = 1
+			elif pressedKeys[K_d]:
+				angMove = -1
+
+			if pressedKeys[K_c]:
+				angMove *= 2
+
+			self.paddle.move(linMove, angMove)
 			paddle.draw()
-
-			oldMouseX = mouseX
-			oldMouseY = mouseY
 
 			# Instruct the world to perform a single step of simulation. It is
 			# generally best to keep the time step and iterations fixed.
