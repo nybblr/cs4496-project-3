@@ -18,7 +18,7 @@ class Level:
 			for y in range(sprite.get_height()):
 				color = sprite.get_at((x, y))
 
-				rgb = (color[0], color[1], color[2])
+				rgb = (color[0]/255.0, color[1]/255.0, color[2]/255.0)
 				density = 0 if color[3] is 255 else color[3]/50.0
 
 				if color[3] is not 0:

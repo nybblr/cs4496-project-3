@@ -4,7 +4,7 @@ from pygame.locals import *
 from Box2D import *
 
 class Shape:
-	def __init__(self, game, body=None, color=(0,0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0, pointer=None):
+	def __init__(self, game, body=None, color=(0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0, pointer=None):
 		self.game = game
 		self.color = color
 
@@ -58,7 +58,7 @@ class Shape:
 		else:
 			self.body = body
 
-	def draw(self):
+	def draw(self, alpha=1.0):
 		body = self.body
 		game = self.game
 		screen = self.game.screen
@@ -71,5 +71,18 @@ class Shape:
 			else:
 				vertices = [b2Mul(body.GetXForm(), v)*game.ppm for v in shape.vertices]
 				vertices = [(v[0], game.height-v[1]) for v in vertices]
-				pygame.draw.polygon(screen, self.color, vertices)
+				pygame.draw.polygon(screen, self.toScreenColor(self.color, defaultAlpha=alpha), vertices)
 
+	def toScreenColor(self, color, defaultAlpha=1.0):
+		# Reformat colors
+		r = color[0]
+		g = color[1]
+		b = color[2]
+		a = defaultAlpha
+
+		# Was alpha included?
+		if len(color) is 4:
+			a = color[3]
+
+		sane = (int(r*255), int(g*255), int(b*255), int(a*255))
+		return sane

@@ -5,6 +5,7 @@ class Block:
 		self.game = game
 		self.position = position
 		self.color = color
+		self.tough = 4
 		self.shape = Shape(game,
 				kind = 'box',
 				color = color,
@@ -14,5 +15,16 @@ class Block:
 				pointer = self,
 		)
 
+	def handleCollision(self, cp):
+		self.bump
+		print("I'm a block!")
+
+	def bump(self):
+		if self.tough is 0:
+			return
+		self.tough -= 1
+
 	def draw(self):
-		self.shape.draw()
+		self.shape.draw(
+				alpha = (4-self.tough)/4.0
+		)
