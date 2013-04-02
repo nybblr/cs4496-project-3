@@ -56,9 +56,7 @@ class Game:
 		self.world = b2World(worldAABB, gravity, doSleep)
 
 		self.contact = Contact(self)
-		self.contact.game = self
-
-		self.world.SetContactListener = self.contact
+		self.world.SetContactListener(self.contact)
 
 		self.shapes = []
 		self.blocks = []
