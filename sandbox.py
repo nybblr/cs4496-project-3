@@ -5,9 +5,13 @@ from Box2D import *
 
 import physics
 import draw
+from contact import *
+
+from level import *
 from shape import *
-from paddle import *
 from block import *
+from paddle import *
+from paddlek import *
 
 class Game:
         def __init__(self):
@@ -52,17 +56,23 @@ class Game:
                 # Construct a world object, which will hold and simulate the rigid bodies.
                 self.world = b2World(worldAABB, gravity, doSleep)
 
+                self.contact = Contact()
+                self.contact.game = self
+
+                self.world.SetContactListener = self.contact
+
                 self.shapes = []
                 self.blocks = []
                 self.walls = []
                 self.levels = []
                 # self.paddle = None
+                self.lives = 0
 
                 # Define the walls.
                 self.initWalls()
 
                 # Define the paddle.
-                self.paddle = Paddle(self, 1, 0.5)
+                self.paddle = PaddleK(self, 1, 0.5)
 
         def initWalls(self):
                 world = self.world
@@ -99,131 +109,102 @@ class Game:
                 world = self.world
                 screen = self.screen
                 shapes = self.shapes
+                blocks = self.blocks
                 colors = self.colors
+                paddle = self.paddle
 
-                # Define the walls.
-                self.initWalls()
-
-                # Define the dynamic body.
-                body1 = Shape(self,
-                                kind = "box",
-                                position = (15.0, 11.0),
-                                params = (1.0, 1.0),
-                                restitution = 0.8
-                )
-
-                # Add shape
-                shapes.append(body1)
-
-                # Define another body
-                body2 = Shape(self,
-                                kind = "box",
-                                position = (14.0, 13.0),
-                                params = (1.0, 1.0),
-                                restitution = 0.8,
-                )
-
-                # Add shape
-                shapes.append(body2)
-
-                # Define another body
-                body3 = Shape(self,
-                                kind = "box",
-                                position = (12.9, 11.0),
-                                params = (1.0, 1.0),
-                                restitution = 0.8,
-                )
-
-                # Add shape
-                shapes.append(body3)
-
-                # Define another body
-                body4 = Shape(self,
-                                kind = "box",
-                                position = (13.8, 9.0),
-                                params = (1.0, 1.0),
-                                restitution = 0.8,
-                )
-
-                # Add shape
-                shapes.append(body4)
-
-
-                # Define another body
-                body5 = Shape(self,
-                                kind = "circle",
-                                position = (4.0, 15.0),
-                                params = 1.0,
-                                restitution = 0.8,
-                                density = 5
-                )
-
-                # Add shape
-                shapes.append(body5)
-
-                # Define another body
-                body6 = Shape(self,
-                                kind = "polygon",
-                                position = (12.8, 7.5),
-                                params = [(0.0,0.0),(3.0,0.0),(3.0,0.5),(0.0,0.5)],
-                                restitution = 0.8,
-                                density = 0
-                )
-
-                # Add shape
-                shapes.append(body6)
+                level = Level(self)
+                level.initFromFile('sprites/mario-stable.png', (12, 4))
 
                 block = pygame.image.load("sprites/CoinBlock.jpg").convert()
                 block = pygame.transform.scale(block, (50, 50))
                 blockrect = block.get_rect()
 
-                # Prepare for simulation. Typically we use a time step of 1/60 of a
-                # second (60Hz) and 10 iterations. This provides a high quality simulation
-                # in most game scenarios.
-                timeStep = 1.0 / 60.0
-                iterations = 10
+                # Define another body
+                ball = Shape(self,
+                                kind = "circle",
+                                position = (18, 5.0),
+                                params = self.grid,
+                                restitution = 0.8
+                )
+
+                # Add shape
+                shapes.append(ball)
 
                 # Prepare for simulation. Typically we use a time step of 1/60 of a
                 # second (60Hz) and 10 iterations. This provides a high quality simulation
                 # in most game scenarios.
                 timeStep = 1.0 / 60.0
                 iterations = 10
-
-                # Used for paddle rotation
-                (oldMouseX, oldMouseY) = pygame.mouse.get_pos()
 
                 # This is our little game loop.
+                (oldMouseX, oldMouseY) = pygame.mouse.get_pos()
                 running = True
+                movementTimer = 0
                 while running:
-                        (mouseX, mouseY) = pygame.mouse.get_pos()
-                        
                         for event in pygame.event.get():
                                 if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
                                         running = False
 
+                        if ball.body.position[1] < -5:
+                                ball.body.SetLinearVelocity((0, 0))
+                                ball.body.position = (18, 5.0)
+                                self.lives += 1
+
                         screen.fill(colors['background'])
 
-                        title = self.fonts['title'].render('Hello there!', True, (0,0,0))
-                        screen.blit(title, (20, 20))
+                        title = self.fonts['title'].render('Lives lost: ' + str(self.lives), True, (0,0,0))
+                        screen.blit(title, (20, 2))
 
-                        blockrect = blockrect.move([2,2])
-                        screen.blit(block, blockrect)
+                        controls1 = self.fonts['title'].render('z and x rotate', True, (0,0,0))
+                        controls2 = self.fonts['title'].render('arrows move', True, (0,0,0))
+                        screen.blit(controls1, (325, 2))
+                        screen.blit(controls2, (345, 52))
 
                         for shape in shapes:
                                 shape.draw()
 
-                        self.paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
-                        self.paddle.draw()
+                        for block in blocks:
+                                block.draw()
 
-                        # Instruct the world to perform a single step of simulation. It is
-                        # generally best to keep the time step and iterations fixed.
-                        world.Step(timeStep, iterations, iterations)
+                        for block in level.blocks:
+                                block.draw()
 
-                        pygame.display.flip()
-                        self.clock.tick(self.fps)
+                        (mouseX, mouseY) = pygame.mouse.get_pos()
+                        linMove = 0
+                        angMove = 0
+
+                        pressedKeys = pygame.key.get_pressed()
+                        if pressedKeys[K_LEFT]:
+                            linMove = -1
+                        elif pressedKeys[K_RIGHT]:
+                            linMove = 1
+
+                        if pressedKeys[K_z] and movementTimer == 0:
+                            angMove = -1
+                            movementTimer = 1
+                        elif pressedKeys[K_x] and movementTimer == 0:
+                            angMove = 1
+                            movementTimer = 1
+
+                        if movementTimer > 0:
+                                movementTimer += 1
+                        if movementTimer >= 5:
+                                movementTimer = 0
+
+                        #paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
+                        self.paddle.move(linMove, angMove)
+                        paddle.draw()
 
                         oldMouseX = mouseX
                         oldMouseY = mouseY
+
+                        # Instruct the world to perform a single step of simulation. It is
+                        # generally best to keep the time step and iterations fixed.
+                        world.Step(timeStep * self.warp, iterations, iterations)
+
+                        pygame.display.flip()
+                        self.clock.tick(self.fps)
 
         def toScreenCoords(self, coords):
                 # Scale and flip
