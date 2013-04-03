@@ -197,7 +197,7 @@ class Game:
         if event.type == KEYDOWN:
           running = False
 
-  def gameScreen(self, lvl=1):
+  def gameScreen(self, lvl):
     world = self.world
     screen = self.screen
     shapes = self.shapes
@@ -259,7 +259,7 @@ class Game:
         block.draw()
 
       if blockNum <= 0:
-        self.winScreen()
+        self.winScreen(lvl+1)
         running = False
         break
 
@@ -268,11 +268,13 @@ class Game:
 
       linMove = 0
       angMove = 0
-      
+
       pressedKeys = pygame.key.get_pressed()
+
       if pressedKeys[K_p]:
         self.controlScreen()
 
+      # Paddle
       if pressedKeys[K_LEFT]:
         linMove = -1
       elif pressedKeys[K_RIGHT]:
@@ -289,6 +291,11 @@ class Game:
       self.paddle.move(linMove, angMove)
       paddle.draw()
 
+      # Cheats
+      if pressedKeys[K_e]:
+        self.winScreen(lvl+1)
+        running = False
+        break
       if pressedKeys[K_f]:
         ball.density(100.0)
       else:
@@ -304,7 +311,7 @@ class Game:
       pygame.display.flip()
       self.clock.tick(self.fps)
 
-  def winScreen(self):
+  def winScreen(self, lvl):
     screen = self.screen
     colors = self.colors
     world = self.world
@@ -317,7 +324,7 @@ class Game:
     running = True
     while running:
       screen.fill(colors['background'])
-      
+
       screen.blit(title1, (self.width/2 - title1Size[0]/2, 75))
       screen.blit(title2, (self.width/2 - title2Size[0]/2, 350))
       screen.blit(self.wimage, self.wimagerect)
@@ -331,6 +338,9 @@ class Game:
         elif event.type == KEYDOWN:
           if event.key == K_ESCAPE:
             self.isRunning = False
+            break
+          game.reset()
+          self.gameScreen(lvl)
           running = False
 
   def loseScreen(self):
@@ -346,7 +356,7 @@ class Game:
     running = True
     while running:
       screen.fill(colors['background'])
-            
+
       screen.blit(title1, (self.width/2 - title1Size[0]/2, 205))
       screen.blit(title2, (self.width/2 - title2Size[0]/2, 250))
 
@@ -398,7 +408,7 @@ if __name__ == "__main__":
   game = Game()
   game.startScreen()
   while(game.isRunning):
-    game.gameScreen()
+    game.gameScreen(1)
     game.reset()
 
   pygame.quit()
