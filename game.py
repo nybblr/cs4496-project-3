@@ -197,7 +197,7 @@ class Game:
         if event.type == KEYDOWN:
           running = False
 
-  def gameScreen(self):
+  def gameScreen(self, lvl=1):
     world = self.world
     screen = self.screen
     shapes = self.shapes
@@ -206,7 +206,7 @@ class Game:
 
     self.level = Level(self)
     level = self.level
-    level.initFromFile('sprites/mario-stable.png', (12, 4))
+    level.initFromFile('levels/level-'+str(lvl)+'.png', (12, 4))
     self.blocks = level.blocks
     blocks = self.blocks
 
