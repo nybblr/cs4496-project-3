@@ -18,16 +18,8 @@ Breakdown needs a few dependencies:
 
 Detailed installation directions can be found at the [GitHub page.](http://github.com/nybblr/cs4496-project-3)
 
-## Update Author Attributes
-
-In `_config.yml` remember to specify your own data:
-    
-    title : My Blog =)
-    
-    author :
-      name : Name Lastname
-      email : blah@email.test
-      github : username
-      twitter : username
-
-The theme should reference these variables whenever needed.
+## Screenshots
+![Load screen](images/load.png)
+![Instructions](images/instructions.png)
+![Level](images/level.png)
+![Breakdown](images/breakdown.png)
