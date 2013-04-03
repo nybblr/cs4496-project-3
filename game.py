@@ -84,6 +84,10 @@ class Game:
     self.lives = 5
     self.points = 0
 
+    self.awardText = self.fonts['title'].render('', True, (0,0,0))
+    self.awardTextSize = (0, 0)
+    self.showAward = 0
+
     self.isRunning = True
 
     # Define the walls.
@@ -303,6 +307,11 @@ class Game:
 
       screen.blit(lives, (20, 400))
       screen.blit(points, (20, 440))
+      if self.showAward > 0:
+        self.showAward += 1
+        if self.showAward > 15:
+          self.showAward = 0
+        screen.blit(self.awardText, (self.width/2 - self.awardTextSize[0]/2, 15))
 
       # Instruct the world to perform a single step of simulation. It is
       # generally best to keep the time step and iterations fixed.
@@ -316,8 +325,10 @@ class Game:
     colors = self.colors
     world = self.world
 
+    title0 = self.fonts['controls'].render('You had ' + str(self.points) + ' points!', True, (0,0,0))
     title1 = self.fonts['title'].render('YOU WIN!!', True, (0,0,0))
     title2 = self.fonts['controls'].render('Press any key', True, (0,0,0))
+    title0Size = self.fonts['controls'].size('You had ' + str(self.points) + ' points!')
     title1Size = self.fonts['title'].size('YOU WIN!!!')
     title2Size = self.fonts['controls'].size('Press any key')
 
@@ -325,6 +336,7 @@ class Game:
     while running:
       screen.fill(colors['background'])
 
+      screen.blit(title0, (self.width/2 - title0Size[0]/2, 35))
       screen.blit(title1, (self.width/2 - title1Size[0]/2, 75))
       screen.blit(title2, (self.width/2 - title2Size[0]/2, 350))
       screen.blit(self.wimage, self.wimagerect)
@@ -340,7 +352,8 @@ class Game:
             self.isRunning = False
             break
           game.reset()
-          self.gameScreen(lvl)
+          if(lvl <= 2):
+            self.gameScreen(lvl)
           running = False
 
   def loseScreen(self):
@@ -392,6 +405,8 @@ class Game:
     self.levels = []
     self.lives = 5
     self.points = 0
+    self.awardText = self.fonts['title'].render('', True, (0,0,0))
+    self.awardTextSize = (0, 0)
 
   def toScreenCoords(self, coords):
     # Scale and flip
@@ -402,6 +417,9 @@ class Game:
     return coords[0]/self.ppm, (game.height-coords[1])/self.ppm
 
   def award(self, name):
+    self.awardText = self.fonts['controls'].render('You won the ' + name + ' award!', True, (0,0,0))
+    self.awardTextSize = self.fonts['controls'].size('You won the ' + name + ' award!')
+    self.showAward = 1
     self.points += self.awards[name]
 
 if __name__ == "__main__":
