@@ -1,7 +1,7 @@
 from shape import *
 
 class Block:
-  def __init__(self, game, position=(0,0), color=(0,0,0), density=1.0, tough=3, static=False):
+  def __init__(self, game, position=(0,0), color=(0,0,0), density=1.0, tough=2, static=False):
     self.game = game
     self.position = position
     self.color = color
@@ -30,14 +30,15 @@ class Block:
       if self.static:
         self.static = False
         self.body.density = self.density
+        self.tough = self.maxTough
       else:
         self.destroy()
 
-  def destroy(self):
+  def destroy(self, now=False):
     if not self.shape:
       return
 
-    self.shape.destroy()
+    self.shape.destroy(now)
     self.shape = None
     if self in self.game.blocks:
       self.game.blocks.remove(self)
@@ -46,7 +47,8 @@ class Block:
     if not self.shape:
       return
 
-    if self.tough is 0:
+    if self.tough is 0 and not self.static:
+      print("NOT GOOD!!!")
       alpha = 1.0
     else:
       alpha = (self.tough) / float(self.maxTough)

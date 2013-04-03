@@ -70,9 +70,12 @@ class Shape:
     else:
       self.body = body
 
-  def destroy(self):
+  def destroy(self, now=False):
     self.__class__.destroyed.append((self.game.world, self.body))
     self.body = None
+
+    if now:
+      Shape.destroyPending()
 
   def draw(self, alpha=1.0):
     if not self.body:

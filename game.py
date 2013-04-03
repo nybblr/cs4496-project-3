@@ -116,25 +116,25 @@ class Game:
     title2 = self.fonts['title'].render('Press any key', True, (255,255,255))
     title1Size = self.fonts['title'].size('WELCOME TO BREAKDOWN')
     title2Size = self.fonts['title'].size('Press any key')
-    
+
     running = True
-    while running:          
+    while running:
       screen.fill(colors['background'])
-    
+
       screen.blit(title1, (self.width/2 - title1Size[0]/2, 20))
       startBlock.draw()
       screen.blit(title2, (self.width/2 - title2Size[0]/2, 325))
       startBlock.body.setAngle(0.01+startBlock.body.GetAngle())
       if (startBlock.body.GetAngle() >= 360):
         startBlock.body.setAngle(startBlock.body.GetAngle() - 360)
-        
+
       pygame.display.flip()
 
       for event in pygame.event.get():
         if event.type == KEYDOWN:
           world.DestroyBody(startBlock.body)
           running = False
-    
+
   def gameScreen(self):
     world = self.world
     screen = self.screen
@@ -243,12 +243,12 @@ class Game:
     title2 = self.fonts['title'].render('Press any key', True, (0,0,0))
     title1Size = self.fonts['title'].size('YOU LOSE')
     title2Size = self.fonts['title'].size('Press any key')
-    
+
     running = True
-    while running:            
+    while running:
       screen.blit(title1, (self.width/2 - title1Size[0]/2, 205))
       screen.blit(title2, (self.width/2 - title2Size[0]/2, 240))
-        
+
       pygame.display.flip()
 
       for event in pygame.event.get():
@@ -265,18 +265,16 @@ class Game:
     shapes = self.shapes
     blocks = self.blocks
     level = self.level
-    
+
     for shape in shapes:
-      world.DestroyBody(shape.body)
+      shape.destroy(True)
 
     for block in blocks:
-      if block.shape:
-        world.DestroyBody(block.shape.body)
+      block.destroy(True)
 
     for block in level.blocks:
-      if block.shape:
-        world.DestroyBody(block.shape.body)
-        
+      block.destroy(True)
+
     self.shapes = []
     self.blocks = []
     self.walls = []
