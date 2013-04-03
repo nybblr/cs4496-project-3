@@ -72,6 +72,7 @@ class Shape:
 
       # Set the pointer for quick access (events).
       shape.SetUserData(data)
+      bodyNew.SetUserData(data)
 
       # Now tell the dynamic body to compute it's mass properties base on its shape.
       bodyNew.SetMassFromShapes()

@@ -6,6 +6,7 @@ from Box2D import *
 import physics
 import draw
 from contact import *
+from boundary import *
 
 from level import *
 from shape import *
@@ -47,9 +48,10 @@ class Game:
 
     # Define the size of the world. Simulation will still work
     # if bodies reach the end of the world, but it will be slower.
+    margin = 5.0
     worldAABB=b2AABB()
-    worldAABB.lowerBound.Set(-100.0, -100.0)
-    worldAABB.upperBound.Set(100.0, 100.0)
+    worldAABB.lowerBound.Set(-margin, -margin)
+    worldAABB.upperBound.Set(self.mwidth+margin, self.mheight+margin)
 
     # Define the gravity vector.
     gravity = b2Vec2(0.0, -10.0)
@@ -62,6 +64,9 @@ class Game:
 
     self.contact = Contact(self)
     self.world.SetContactListener(self.contact)
+
+    self.boundary = Boundary(self)
+    self.world.SetBoundaryListener(self.boundary)
 
     self.shapes = []
     self.blocks = []
@@ -144,13 +149,14 @@ class Game:
     world = self.world
     screen = self.screen
     shapes = self.shapes
-    blocks = self.blocks
     colors = self.colors
     paddle = self.paddle
 
     self.level = Level(self)
     level = self.level
     level.initFromFile('sprites/mario-stable.png', (12, 4))
+    self.blocks = level.blocks
+    blocks = self.blocks
 
     # Define another body
     self.ball = Shape(self,
@@ -200,8 +206,8 @@ class Game:
       for block in blocks:
         block.draw()
 
-      for block in level.blocks:
-        block.draw()
+      # for block in level.blocks:
+      #   block.draw()
 
       linMove = 0
       angMove = 0
@@ -224,6 +230,8 @@ class Game:
 
       screen.blit(lives, (20, 400))
       screen.blit(points, (20, 440))
+
+      print(len(self.blocks))
 
       # Instruct the world to perform a single step of simulation. It is
       # generally best to keep the time step and iterations fixed.

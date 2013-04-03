@@ -33,7 +33,6 @@ class Contact(b2ContactListener):
   """
   Handles all of the contact states passed in from Box2D.
   """
-  test = None
   def __init__(self, game):
     super(Contact, self).__init__()
     self.game = game

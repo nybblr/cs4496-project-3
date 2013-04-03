@@ -21,6 +21,9 @@ class Block:
   def handleCollision(self, cp):
     self.bump()
 
+  def handleBoundary(self):
+    self.destroy()
+
   def bump(self):
     if self.tough is not 0:
       self.tough -= 1
