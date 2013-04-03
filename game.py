@@ -64,7 +64,8 @@ class Game:
     self.walls = []
     self.levels = []
     # self.paddle = None
-    self.lives = 20
+    self.lives = 5
+    self.points = 0
 
     self.isRunning = True
 
@@ -269,7 +270,8 @@ class Game:
     self.blocks = []
     self.walls = []
     self.levels = []
-    self.lives = 20
+    self.lives = 5
+    self.points = 0
 
   def toScreenCoords(self, coords):
     # Scale and flip

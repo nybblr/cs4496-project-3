@@ -68,9 +68,6 @@ class Contact(b2ContactListener):
       # except AttributeError:
         # print("No collision handler found for "+str(other))
 
-    if self.test:
-      self.test.points.append(cp)
-
   def Add(self, point):
     self.handleCall(ContactTypes.added, point)
 
