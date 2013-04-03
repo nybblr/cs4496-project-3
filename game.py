@@ -255,7 +255,7 @@ class Game:
       pressedKeys = pygame.key.get_pressed()
       if pressedKeys[K_p]:
         self.controlScreen()
-        
+
       if pressedKeys[K_LEFT]:
         linMove = -1
       elif pressedKeys[K_RIGHT]:
