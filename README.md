@@ -12,12 +12,12 @@ The game is simple to play: use the left and right arrow keys to move the paddle
 Installation
 ============
 Breakdown needs a few dependencies:
-- Python (2.7.3 tested)
-- SWIG
-- PyGame
+- Python (developed in 2.7.3)
+- SWIG (latest)
+- PyGame (latest)
 - PyBox2D 2.02b2
 
 It is recommended that you install in that order. Here's a cheatsheet for quick install:
-- Install swig with `pip install swig`.
+- Install swig with `pip install swig`
 - Install the **latest** pygame with `pip install hg+http://bitbucket.org/pygame/pygame`
 - Install the 2.02b2 release of pybox2d with pip install `http://pybox2d.googlecode.com/files/pybox2d-2.0.2b2.zip`
