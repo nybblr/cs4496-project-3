@@ -102,7 +102,10 @@ class PaddleKey:
     shapeDef.restitution = 1.5
 
     # Add the shape to the body.
-    bodyNew.CreateShape(shapeDef)
+    shape = bodyNew.CreateShape(shapeDef)
+
+    # Assign pointer
+    shape.SetUserData(self)
 
     # Now tell the dynamic body to compute it's mass properties base on its shape.
     bodyNew.SetMassFromShapes()

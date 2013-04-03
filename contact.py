@@ -39,6 +39,7 @@ class Contact(b2ContactListener):
 
   def handleCall(self, state, point):
     ball = self.game.ball
+    paddle = self.game.paddle
     obj1 = point.shape1.GetUserData()
     obj2 = point.shape2.GetUserData()
 
@@ -55,6 +56,8 @@ class Contact(b2ContactListener):
     if obj1 is ball or obj2 is ball:
       this  = obj2 if obj2 is ball else obj1
       other = obj2 if obj1 is ball else obj1
+      cp.this  = this
+      cp.other = other
 
       # Try to notify the other object.
       # try:
@@ -62,9 +65,14 @@ class Contact(b2ContactListener):
         other.handleCollision(cp)
       # except AttributeError:
         # print("No collision handler found for "+str(other))
+    elif obj1 is paddle or obj2 is paddle:
+      this  = obj2 if obj2 is paddle else obj1
+      other = obj2 if obj1 is paddle else obj1
+      cp.this  = this
+      cp.other = other
 
-    # if isinstance(other, Block):
-    #   other.handleCollision(cp)
+      if isinstance(other, Block):
+        other.handleCollision(cp)
 
   def Add(self, point):
     self.handleCall(ContactTypes.added, point)

@@ -51,6 +51,8 @@ class Game:
     self.awards = dict()
     self.awards['obliterate'] = 5
     self.awards['blast'] = 2
+    self.awards['keyskillz'] = 1
+    self.awards['boundless'] = 1
 
     # Define the size of the world. Simulation will still work
     # if bodies reach the end of the world, but it will be slower.

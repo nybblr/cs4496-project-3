@@ -19,13 +19,13 @@ class Block:
     )
 
   def handleCollision(self, cp):
-    self.bump()
+    self.bump(cp.this)
 
   def handleBoundary(self):
-    self.game.points += 1
+    self.game.award('boundless')
     self.destroy()
 
-  def bump(self):
+  def bump(self, obj=None):
     if self.tough is not 0:
       self.tough -= 1
 
@@ -35,9 +35,15 @@ class Block:
         self.static = False
         self.shape.density(self.density)
         self.tough = self.maxTough
-        self.game.award('blast')
+        if obj is self.game.paddle:
+          self.game.award('keyskillz')
+        else:
+          self.game.award('blast')
       else:
-        self.game.award('obliterate')
+        if obj is self.game.paddle:
+          self.game.award('keyskillz')
+        else:
+          self.game.award('obliterate')
         self.destroy()
 
   def destroy(self, now=False):
