@@ -29,8 +29,9 @@ class Block:
     if self.tough is 0:
       if self.static:
         self.static = False
-        self.shape.density(4.0)
+        self.shape.density(self.density)
         self.tough = self.maxTough
+        self.game.award('blast')
       else:
         self.game.award('obliterate')
         self.destroy()

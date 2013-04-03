@@ -285,7 +285,7 @@ class Game:
     # Scale and flip
     return coords[0]/self.ppm, (game.height-coords[1])/self.ppm
 
-  def award(name):
+  def award(self, name):
     self.points += self.awards[name]
 
 if __name__ == "__main__":
