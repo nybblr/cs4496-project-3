@@ -148,6 +148,13 @@ class PaddleKey:
     self.body.setAngle(self.possibleAngles[self.angle])
     self.body.SetAngularVelocity(0)
 
+  # def density(self, value):
+  #   for shape in self.body.shapeList:
+  #     shape.SetDensity(value)
+
+  #   self.body.SetMassFromShapes()
+  #   self.body.wakeup()
+
   def draw(self):
     body = self.body
     game = self.game

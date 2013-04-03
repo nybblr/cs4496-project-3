@@ -228,10 +228,13 @@ class Game:
       self.paddle.move(linMove, angMove)
       paddle.draw()
 
+      if pressedKeys[K_f]:
+        ball.density(100.0)
+      else:
+        ball.density(1.0)
+
       screen.blit(lives, (20, 400))
       screen.blit(points, (20, 440))
-
-      print(len(self.blocks))
 
       # Instruct the world to perform a single step of simulation. It is
       # generally best to keep the time step and iterations fixed.
