@@ -33,7 +33,7 @@ class Game:
     pygame.init()
 
     self.screen = pygame.display.set_mode((self.width, self.height), 0, 32)
-    pygame.display.set_caption('Simple pygame example')
+    pygame.display.set_caption('BREAKDOWN')
     self.clock = pygame.time.Clock()
 
     self.fonts = dict()
