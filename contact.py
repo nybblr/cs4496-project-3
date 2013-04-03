@@ -62,10 +62,11 @@ class Contact(b2ContactListener):
       cp.state    = state
 
       # Try to notify the other object.
-      try:
+      # try:
+      if isinstance(other, Block):
         other.handleCollision(cp)
-      except AttributeError:
-        print("No collision handler found for "+str(other))
+      # except AttributeError:
+        # print("No collision handler found for "+str(other))
 
     if self.test:
       self.test.points.append(cp)

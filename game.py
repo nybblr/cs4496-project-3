@@ -19,7 +19,7 @@ class Game:
     self.grid = 1.0 / 1.5 # grid cell size in world coords
     self.fps = 60
     self.warp = 0.75 # simulation speed ratio
-    self.time_step = 1.0 / self.fps
+    self.timeStep = 1.0 / self.fps
     self.width, self.height = 640, 480
 
     self.mwidth = self.width / self.ppm
@@ -64,7 +64,7 @@ class Game:
     self.walls = []
     self.levels = []
     # self.paddle = None
-    self.lives = 5
+    self.lives = 20
 
     self.isRunning = True
 
@@ -163,11 +163,9 @@ class Game:
     # Prepare for simulation. Typically we use a time step of 1/60 of a
     # second (60Hz) and 10 iterations. This provides a high quality simulation
     # in most game scenarios.
-    timeStep = 1.0 / 60.0
     iterations = 10
 
     # This is our little game loop.
-    # (oldMouseX, oldMouseY) = pygame.mouse.get_pos()
     running = True
     while running:
       for event in pygame.event.get():
@@ -175,7 +173,7 @@ class Game:
           self.isRunning = False
           running = False
 
-      Shape.destroyPending()
+      Shape.updatePending()
 
       screen.fill(colors['background'])
 
@@ -200,14 +198,6 @@ class Game:
       for block in level.blocks:
         block.draw()
 
-      # (mouseX, mouseY) = pygame.mouse.get_pos()
-
-      # paddle.move((mouseX/self.ppm)-2, oldMouseY-mouseY)
-      # paddle.draw()
-
-      # oldMouseX = mouseX
-      # oldMouseY = mouseY
-
       linMove = 0
       angMove = 0
       pressedKeys = pygame.key.get_pressed()
@@ -229,7 +219,7 @@ class Game:
 
       # Instruct the world to perform a single step of simulation. It is
       # generally best to keep the time step and iterations fixed.
-      world.Step(timeStep * self.warp, iterations, iterations)
+      world.Step(self.timeStep * self.warp, iterations, iterations)
 
       pygame.display.flip()
       self.clock.tick(self.fps)
@@ -279,7 +269,7 @@ class Game:
     self.blocks = []
     self.walls = []
     self.levels = []
-    self.lives = 5
+    self.lives = 20
 
   def toScreenCoords(self, coords):
     # Scale and flip

@@ -7,14 +7,25 @@ import Queue
 
 class Shape:
   destroyed = list()
+  dynamics  = list()
 
   @classmethod
-  def destroyPending(klass):
+  def updatePending(klass):
     for item in klass.destroyed:
       (world, body) = item
       world.DestroyBody(body)
 
     klass.destroyed = list()
+
+    for item in klass.dynamics:
+      (body, density) = item
+      for shape in body.shapeList:
+        shape.SetDensity(4.0)
+
+      body.SetMassFromShapes()
+      body.WakeUp()
+
+    klass.dynamics = list()
 
   def __init__(self, game, body=None, color=(0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0, pointer=None):
     self.game = game
@@ -75,7 +86,10 @@ class Shape:
     self.body = None
 
     if now:
-      Shape.destroyPending()
+      Shape.updatePending()
+
+  def density(self, value):
+    self.__class__.dynamics.append((self.body, value))
 
   def draw(self, alpha=1.0):
     if not self.body:

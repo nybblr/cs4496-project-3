@@ -29,7 +29,7 @@ class Block:
     if self.tough is 0:
       if self.static:
         self.static = False
-        self.body.density = self.density
+        self.shape.density(4.0)
         self.tough = self.maxTough
       else:
         self.destroy()
@@ -48,10 +48,10 @@ class Block:
       return
 
     if self.tough is 0 and not self.static:
-      print("NOT GOOD!!!")
+      # print("NOT GOOD!!!")
       alpha = 1.0
     else:
-      alpha = (self.tough) / float(self.maxTough)
+      alpha = self.tough / float(self.maxTough)
 
     self.shape.draw(
         alpha = alpha
