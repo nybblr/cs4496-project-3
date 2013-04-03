@@ -102,7 +102,37 @@ class Game:
 
       self.walls.append(wall)
 
-  def run(self):
+  def startScreen(self):
+    screen = self.screen
+    colors = self.colors
+    world = self.world
+
+    startBlock = Shape(self, position = (self.mwidth/2, 5.0), params = (10, 10))
+
+    title1 = self.fonts['title'].render('WELCOME TO BREAKDOWN', True, (0,0,0))
+    title2 = self.fonts['title'].render('Press any key', True, (255,255,255))
+    title1Size = self.fonts['title'].size('WELCOME TO BREAKDOWN')
+    title2Size = self.fonts['title'].size('Press any key')
+    
+    running = True
+    while running:          
+      screen.fill(colors['background'])
+    
+      screen.blit(title1, (self.width/2 - title1Size[0]/2, 20))
+      startBlock.draw()
+      screen.blit(title2, (self.width/2 - title2Size[0]/2, 325))
+      startBlock.body.setAngle(0.01+startBlock.body.GetAngle())
+      if (startBlock.body.GetAngle() >= 360):
+        startBlock.body.setAngle(startBlock.body.GetAngle() - 360)
+        
+      pygame.display.flip()
+
+      for event in pygame.event.get():
+        if event.type == KEYDOWN:
+          world.DestroyBody(startBlock.body)
+          running = False
+    
+  def gameScreen(self):
     world = self.world
     screen = self.screen
     shapes = self.shapes
@@ -205,6 +235,7 @@ class Game:
 
 if __name__ == "__main__":
   game = Game()
-  game.run()
+  game.startScreen()
+  game.gameScreen()
 
   pygame.quit()
