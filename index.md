@@ -1,13 +1,14 @@
 ---
 layout: page
-title: Hello World!
+title: "Breakdown: A Physics Game Remake in Box2D and Python."
 tagline: Supporting tagline
 ---
 {% include JB/setup %}
 
 Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
+**Breakdown** is a remake of the classic breakout games popular since the advent of PDA mobile games.
 
-Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
+It is open source and written in Python and Box2D. [Fork it on GitHub!](http://github.com/nybblr/cs4496-project-3)
 
 ## Update Author Attributes
 
