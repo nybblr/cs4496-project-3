@@ -19,6 +19,7 @@ class Game:
     self.ppm = 20.0 # pixels per meter
     self.grid = 1.0 / 1.5 # grid cell size in world coords
     self.fps = 60
+    self.iterations = 10
     self.warp = 0.75 # simulation speed ratio
     self.timeStep = 1.0 / self.fps
     self.width, self.height = 640, 480
@@ -171,11 +172,6 @@ class Game:
     # Add shape
     shapes.append(ball)
 
-    # Prepare for simulation. Typically we use a time step of 1/60 of a
-    # second (60Hz) and 10 iterations. This provides a high quality simulation
-    # in most game scenarios.
-    iterations = 10
-
     # This is our little game loop.
     running = True
     while running:
@@ -238,7 +234,7 @@ class Game:
 
       # Instruct the world to perform a single step of simulation. It is
       # generally best to keep the time step and iterations fixed.
-      world.Step(self.timeStep * self.warp, iterations, iterations)
+      world.Step(self.timeStep * self.warp, self.iterations, self.iterations)
 
       pygame.display.flip()
       self.clock.tick(self.fps)
