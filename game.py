@@ -41,6 +41,9 @@ class Game:
     self.colors = dict()
     self.colors['background'] = (255,255,255)
 
+    self.awards['obliterate'] = 5
+    self.awards['blast'] = 2
+
     # Define the size of the world. Simulation will still work
     # if bodies reach the end of the world, but it will be slower.
     worldAABB=b2AABB()
