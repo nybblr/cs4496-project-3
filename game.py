@@ -38,6 +38,7 @@ class Game:
 
     self.fonts = dict()
     self.fonts['title'] = pygame.font.Font('fonts/pushups.otf', 50)
+    self.fonts['controls'] = pygame.font.Font('fonts/pushups.otf', 32)
     self.fonts['inGame'] = pygame.font.Font('fonts/pushups.otf', 30)
 
     self.colors = dict()
@@ -144,6 +145,50 @@ class Game:
       for event in pygame.event.get():
         if event.type == KEYDOWN:
           world.DestroyBody(startBlock.body)
+          self.controlScreen()
+          running = False
+
+  def controlScreen(self):
+    screen = self.screen
+    colors = self.colors
+
+    text1 = self.fonts['title'].render('CONTROLS', True, (0,0,0))
+    text2 = self.fonts['controls'].render('Use the left and right arrow keys to move.', True, (0,0,0))
+    text31 = self.fonts['controls'].render('Hold \'s\' and \'d\' to rotate the', True, (0,0,0))
+    text32 = self.fonts['controls'].render('paddle slightly left and right.', True, (0,0,0))
+    text41 = self.fonts['controls'].render('Hold \'c\' at the same time to', True, (0,0,0))
+    text42 = self.fonts['controls'].render('rotate the paddle further.', True, (0,0,0))
+    text51 = self.fonts['controls'].render('Press \'p\' at any time to', True, (0,0,0))
+    text52 = self.fonts['controls'].render('pause and see this info again.', True, (0,0,0))
+    text6 = self.fonts['controls'].render('Press any key to resume.', True, (0,0,0))
+    text1Size = self.fonts['title'].size('CONTROLS')
+    text2Size = self.fonts['controls'].size('Use the left and right arrow keys to move.')
+    text31Size = self.fonts['controls'].size('Hold \'s\' and \'d\' to rotate the')
+    text32Size = self.fonts['controls'].size('paddle slightly left and right.')
+    text41Size = self.fonts['controls'].size('Hold \'c\' at the same time to')
+    text42Size = self.fonts['controls'].size('rotate the paddle further.')
+    text51Size = self.fonts['controls'].size('Press \'p\' at any time to')
+    text52Size = self.fonts['controls'].size('pause and see this info again.')
+    text6Size = self.fonts['controls'].size('Press any key to continue.')
+
+    running = True
+    while running:
+      screen.fill(colors['background'])
+
+      screen.blit(text1, (self.width/2 - text1Size[0]/2, 20))
+      screen.blit(text2, (self.width/2 - text2Size[0]/2, 100))
+      screen.blit(text31, (self.width/2 - text31Size[0]/2, 145))
+      screen.blit(text32, (self.width/2 - text32Size[0]/2, 175))
+      screen.blit(text41, (self.width/2 - text41Size[0]/2, 220))
+      screen.blit(text42, (self.width/2 - text42Size[0]/2, 250))
+      screen.blit(text51, (self.width/2 - text51Size[0]/2, 295))
+      screen.blit(text52, (self.width/2 - text52Size[0]/2, 325))
+      screen.blit(text6, (self.width/2 - text6Size[0]/2, 370))
+
+      pygame.display.flip()
+
+      for event in pygame.event.get():
+        if event.type == KEYDOWN:
           running = False
 
   def gameScreen(self):
@@ -208,6 +253,9 @@ class Game:
       linMove = 0
       angMove = 0
       pressedKeys = pygame.key.get_pressed()
+      if pressedKeys[K_p]:
+        self.controlScreen()
+        
       if pressedKeys[K_LEFT]:
         linMove = -1
       elif pressedKeys[K_RIGHT]:
