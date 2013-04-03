@@ -36,6 +36,7 @@ class Game:
 
     self.fonts = dict()
     self.fonts['title'] = pygame.font.Font('fonts/pushups.otf', 50)
+    self.fonts['lives'] = pygame.font.Font('fonts/pushups.otf', 30)
 
     self.colors = dict()
     self.colors['background'] = (255,255,255)
@@ -63,7 +64,9 @@ class Game:
     self.walls = []
     self.levels = []
     # self.paddle = None
-    self.lives = 0
+    self.lives = 5
+
+    self.isRunning = True
 
     # Define the walls.
     self.initWalls()
@@ -140,7 +143,8 @@ class Game:
     colors = self.colors
     paddle = self.paddle
 
-    level = Level(self)
+    self.level = Level(self)
+    level = self.level
     level.initFromFile('sprites/mario-stable.png', (12, 4))
 
     # Define another body
@@ -168,18 +172,23 @@ class Game:
     while running:
       for event in pygame.event.get():
         if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+          self.isRunning = False
           running = False
 
       Shape.destroyPending()
 
+      screen.fill(colors['background'])
+
       if ball.body.position[1] < -5:
         ball.body.SetLinearVelocity((0, 0))
         ball.body.position = (18, 5.0)
-        self.lives += 1
+        self.lives -= 1
+        if self.lives <= 0:
+          self.loseScreen()
+          running = False
+          break
 
-      screen.fill(colors['background'])
-
-      title = self.fonts['title'].render('Hello there!', True, (0,0,0))
+      title = self.fonts['lives'].render('Lives left: ' + str(self.lives), True, (0,0,0))
       screen.blit(title, (20, 20))
 
       for shape in shapes:
@@ -225,6 +234,55 @@ class Game:
       pygame.display.flip()
       self.clock.tick(self.fps)
 
+  def loseScreen(self):
+    screen = self.screen
+    colors = self.colors
+    world = self.world
+
+    title1 = self.fonts['title'].render('YOU LOSE', True, (0,0,0))
+    title2 = self.fonts['title'].render('Press any key', True, (0,0,0))
+    title1Size = self.fonts['title'].size('YOU LOSE')
+    title2Size = self.fonts['title'].size('Press any key')
+    
+    running = True
+    while running:            
+      screen.blit(title1, (self.width/2 - title1Size[0]/2, 205))
+      screen.blit(title2, (self.width/2 - title2Size[0]/2, 240))
+        
+      pygame.display.flip()
+
+      for event in pygame.event.get():
+        if event.type == QUIT:
+          self.isRunning = False
+          running = False
+        elif event.type == KEYDOWN:
+          if event.key == K_ESCAPE:
+            self.isRunning = False
+          running = False
+
+  def reset(self):
+    world = self.world
+    shapes = self.shapes
+    blocks = self.blocks
+    level = self.level
+    
+    for shape in shapes:
+      world.DestroyBody(shape.body)
+
+    for block in blocks:
+      if block.shape:
+        world.DestroyBody(block.shape.body)
+
+    for block in level.blocks:
+      if block.shape:
+        world.DestroyBody(block.shape.body)
+        
+    self.shapes = []
+    self.blocks = []
+    self.walls = []
+    self.levels = []
+    self.lives = 5
+
   def toScreenCoords(self, coords):
     # Scale and flip
     return coords[0]*self.ppm, game.height-(coords[1]*self.ppm)
@@ -236,6 +294,8 @@ class Game:
 if __name__ == "__main__":
   game = Game()
   game.startScreen()
-  game.gameScreen()
+  while(game.isRunning):
+    game.gameScreen()
+    game.reset()
 
   pygame.quit()
