@@ -352,7 +352,7 @@ class Game:
             self.isRunning = False
             break
           game.reset()
-          if(lvl <= 3):
+          if(lvl < 3):
             self.gameScreen(lvl)
           running = False
 
