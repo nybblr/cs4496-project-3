@@ -235,6 +235,7 @@ class Game:
 
       if ball.body.position[1] < -5:
         ball.body.SetLinearVelocity((0, 0))
+        ball.body.SetAngularVelocity(0)
         ball.body.position = (18, 5.0)
         self.lives -= 1
         if self.lives <= 0:

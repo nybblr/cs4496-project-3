@@ -42,23 +42,19 @@ class Contact(b2ContactListener):
     obj1 = point.shape1.GetUserData()
     obj2 = point.shape2.GetUserData()
 
+    cp          = ContactPoint()
+    cp.shape1   = point.shape1
+    cp.shape2   = point.shape2
+    cp.position = point.position.copy()
+    cp.normal   = point.normal.copy()
+    cp.velocity = point.velocity.copy()
+    cp.id       = point.id
+    cp.state    = state
+
     # Does the event involve the ball?
     if obj1 is ball or obj2 is ball:
-      # print(point.position)
-
       this  = obj2 if obj2 is ball else obj1
       other = obj2 if obj1 is ball else obj1
-
-      cp          = ContactPoint()
-      cp.shape1   = point.shape1
-      cp.shape2   = point.shape2
-      cp.other    = other
-      cp.this     = this
-      cp.position = point.position.copy()
-      cp.normal   = point.normal.copy()
-      cp.velocity = point.velocity.copy()
-      cp.id       = point.id
-      cp.state    = state
 
       # Try to notify the other object.
       # try:
@@ -66,6 +62,9 @@ class Contact(b2ContactListener):
         other.handleCollision(cp)
       # except AttributeError:
         # print("No collision handler found for "+str(other))
+
+    # if isinstance(other, Block):
+    #   other.handleCollision(cp)
 
   def Add(self, point):
     self.handleCall(ContactTypes.added, point)
