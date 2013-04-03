@@ -32,6 +32,7 @@ class Block:
         self.shape.density(4.0)
         self.tough = self.maxTough
       else:
+        self.game.award('obliterate')
         self.destroy()
 
   def destroy(self, now=False):

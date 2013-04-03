@@ -41,6 +41,7 @@ class Game:
     self.colors = dict()
     self.colors['background'] = (255,255,255)
 
+    self.awards = dict()
     self.awards['obliterate'] = 5
     self.awards['blast'] = 2
 
@@ -283,6 +284,9 @@ class Game:
   def toWorldCoords(self, coords):
     # Scale and flip
     return coords[0]/self.ppm, (game.height-coords[1])/self.ppm
+
+  def award(name):
+    self.points += self.awards[name]
 
 if __name__ == "__main__":
   game = Game()
