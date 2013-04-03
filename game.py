@@ -36,7 +36,7 @@ class Game:
 
     self.fonts = dict()
     self.fonts['title'] = pygame.font.Font('fonts/pushups.otf', 50)
-    self.fonts['lives'] = pygame.font.Font('fonts/pushups.otf', 30)
+    self.fonts['inGame'] = pygame.font.Font('fonts/pushups.otf', 30)
 
     self.colors = dict()
     self.colors['background'] = (255,255,255)
@@ -191,8 +191,10 @@ class Game:
           running = False
           break
 
-      title = self.fonts['lives'].render('Lives left: ' + str(self.lives), True, (0,0,0))
-      screen.blit(title, (20, 20))
+      lives = self.fonts['inGame'].render('Lives left: ' + str(self.lives), True, (0,0,0))
+      screen.blit(lives, (20, 400))
+      points = self.fonts['inGame'].render('Points: ' + str(self.points), True, (0,0,0))
+      screen.blit(points, (20, 440))
 
       for shape in shapes:
         shape.draw()
