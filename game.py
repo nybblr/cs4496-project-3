@@ -192,9 +192,7 @@ class Game:
           break
 
       lives = self.fonts['inGame'].render('Lives left: ' + str(self.lives), True, (0,0,0))
-      screen.blit(lives, (20, 400))
       points = self.fonts['inGame'].render('Points: ' + str(self.points), True, (0,0,0))
-      screen.blit(points, (20, 440))
 
       for shape in shapes:
         shape.draw()
@@ -223,6 +221,9 @@ class Game:
 
       self.paddle.move(linMove, angMove)
       paddle.draw()
+
+      screen.blit(lives, (20, 400))
+      screen.blit(points, (20, 440))
 
       # Instruct the world to perform a single step of simulation. It is
       # generally best to keep the time step and iterations fixed.
