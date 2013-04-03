@@ -22,6 +22,7 @@ class Block:
     self.bump()
 
   def handleBoundary(self):
+    self.game.points += 1
     self.destroy()
 
   def bump(self):
@@ -45,8 +46,8 @@ class Block:
 
     self.shape.destroy(now)
     self.shape = None
-    if self in self.game.blocks:
-      self.game.blocks.remove(self)
+    #if self in self.game.blocks:   # I don't know exactly why, as this wasn't new, but these two lines were causing the reset problem
+    #  self.game.blocks.remove(self)
 
   def draw(self):
     if not self.shape:

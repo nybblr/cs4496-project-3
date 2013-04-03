@@ -36,6 +36,10 @@ class Game:
     pygame.display.set_caption('BREAKDOWN')
     self.clock = pygame.time.Clock()
 
+    self.wimage = pygame.image.load('images/trophy.png')
+    self.wimagerect = self.wimage.get_rect()
+    self.wimagerect = self.wimagerect.move(self.width/2 - self.wimage.get_width()/2, self.height/2 - self.wimage.get_height()/2)
+
     self.fonts = dict()
     self.fonts['title'] = pygame.font.Font('fonts/pushups.otf', 50)
     self.fonts['controls'] = pygame.font.Font('fonts/pushups.otf', 32)
@@ -244,14 +248,24 @@ class Game:
       for shape in shapes:
         shape.draw()
 
+      blockNum = 0
+
       for block in blocks:
+        if block.shape:
+          blockNum += 1
         block.draw()
+
+      if blockNum <= 0:
+        self.winScreen()
+        running = False
+        break
 
       # for block in level.blocks:
       #   block.draw()
 
       linMove = 0
       angMove = 0
+      
       pressedKeys = pygame.key.get_pressed()
       if pressedKeys[K_p]:
         self.controlScreen()
@@ -287,20 +301,51 @@ class Game:
       pygame.display.flip()
       self.clock.tick(self.fps)
 
+  def winScreen(self):
+    screen = self.screen
+    colors = self.colors
+    world = self.world
+
+    title1 = self.fonts['title'].render('YOU WIN!!', True, (0,0,0))
+    title2 = self.fonts['controls'].render('Press any key', True, (0,0,0))
+    title1Size = self.fonts['title'].size('YOU WIN!!!')
+    title2Size = self.fonts['controls'].size('Press any key')
+
+    running = True
+    while running:
+      screen.fill(colors['background'])
+      
+      screen.blit(title1, (self.width/2 - title1Size[0]/2, 75))
+      screen.blit(title2, (self.width/2 - title2Size[0]/2, 350))
+      screen.blit(self.wimage, self.wimagerect)
+
+      pygame.display.flip()
+
+      for event in pygame.event.get():
+        if event.type == QUIT:
+          self.isRunning = False
+          running = False
+        elif event.type == KEYDOWN:
+          if event.key == K_ESCAPE:
+            self.isRunning = False
+          running = False
+
   def loseScreen(self):
     screen = self.screen
     colors = self.colors
     world = self.world
 
     title1 = self.fonts['title'].render('YOU LOSE', True, (0,0,0))
-    title2 = self.fonts['title'].render('Press any key', True, (0,0,0))
+    title2 = self.fonts['controls'].render('Press any key', True, (0,0,0))
     title1Size = self.fonts['title'].size('YOU LOSE')
-    title2Size = self.fonts['title'].size('Press any key')
+    title2Size = self.fonts['controls'].size('Press any key')
 
     running = True
     while running:
+      screen.fill(colors['background'])
+            
       screen.blit(title1, (self.width/2 - title1Size[0]/2, 205))
-      screen.blit(title2, (self.width/2 - title2Size[0]/2, 240))
+      screen.blit(title2, (self.width/2 - title2Size[0]/2, 250))
 
       pygame.display.flip()
 
