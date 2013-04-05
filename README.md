@@ -20,4 +20,4 @@ Breakdown needs a few dependencies:
 It is recommended that you install in that order. Here's a cheatsheet for quick install:
 - Install swig with `pip install swig`
 - Install the **latest** pygame with `pip install hg+http://bitbucket.org/pygame/pygame`
-- Install the 2.02b2 release of pybox2d with pip install `http://pybox2d.googlecode.com/files/pybox2d-2.0.2b2.zip`
+- Install the 2.02b2 release of pybox2d with `pip install http://pybox2d.googlecode.com/files/pybox2d-2.0.2b2.zip`
