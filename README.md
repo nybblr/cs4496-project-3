@@ -14,10 +14,24 @@ Installation
 Breakdown needs a few dependencies:
 - Python (developed in 2.7.3)
 - SWIG (latest)
-- PyGame (latest)
+- PyGame (latest) and dependencies (not limited to):
+  - sdl, sdl_mixer, sdl_ttf, sdl_image (all installable through brew)
+  - QT for graphics
 - PyBox2D 2.02b2
 
 It is recommended that you install in that order. Here's a cheatsheet for quick install:
 - Install swig with `pip install swig`
 - Install the **latest** pygame with `pip install hg+http://bitbucket.org/pygame/pygame`
 - Install the 2.02b2 release of pybox2d with `pip install http://pybox2d.googlecode.com/files/pybox2d-2.0.2b2.zip`
+
+**NOTE:** pip doesn't seem to properly install pybox2d, so you may get an error like "Could not find b2ContactListener" when you try to run the main game.py. In that case, manual install it:
+
+    wget http://pybox2d.googlecode.com/files/pybox2d-2.0.2b2.zip
+    unzip pybox2d-2.0.2b2.zip
+    cd Box2D # whatever is the name of the unzipped source
+    python setup.py build
+    python setup.py install
+
+Running
+=======
+Clone the source, cd into the directory and run `python game.py`. Have fun!
