@@ -32,6 +32,6 @@ It is recommended that you install in that order. Here's a cheatsheet for quick 
     python setup.py build
     python setup.py install
 
-Running
+Playing
 =======
 Clone the source, cd into the directory and run `python game.py`. Have fun!
