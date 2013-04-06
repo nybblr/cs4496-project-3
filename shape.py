@@ -15,16 +15,15 @@ class Shape:
       (world, body) = item
       world.DestroyBody(body)
 
-    klass.destroyed = list()
-
     for item in klass.dynamics:
       (body, density) = item
       for shape in body.shapeList:
-        shape.SetDensity(4.0)
+        shape.SetDensity(density)
 
       body.SetMassFromShapes()
       body.WakeUp()
 
+    klass.destroyed = list()
     klass.dynamics = list()
 
   def __init__(self, game, body=None, color=(0,0,0), kind="box", position=(0, 0), params=(), density=1.0, friction=0.3, restitution=1.0, pointer=None):
